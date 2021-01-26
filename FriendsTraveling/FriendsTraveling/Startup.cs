@@ -2,7 +2,7 @@ using AutoMapper;
 using FriendsTraveling.BusinessLayer.Factories.AuthTokenFactory;
 using FriendsTraveling.BusinessLayer.Mappers;
 using FriendsTraveling.BusinessLayer.Services.UserAuthorizationService;
-using FriendsTraveling.BusinessLayer.Services.UserAuthorizationService.UserService;
+using FriendsTraveling.BusinessLayer.Services.UserService;
 using FriendsTraveling.DataLayer.DbContext;
 using FriendsTraveling.DataLayer.Models.Auth;
 using FriendsTraveling.DataLayer.Models.User;

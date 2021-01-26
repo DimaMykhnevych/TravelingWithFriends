@@ -1,7 +1,7 @@
 ﻿using FriendsTraveling.BusinessLayer.Constants;
 using FriendsTraveling.BusinessLayer.DTOs;
 using FriendsTraveling.BusinessLayer.Exeptions;
-using FriendsTraveling.BusinessLayer.Services.UserAuthorizationService.UserService;
+using FriendsTraveling.BusinessLayer.Services.UserService;
 using FriendsTraveling.DataLayer.Models.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

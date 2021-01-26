@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FriendsTraveling.BusinessLayer.Services.UserAuthorizationService.UserService
+namespace FriendsTraveling.BusinessLayer.Services.UserService
 {
     public class UserService : IUserService
     {

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FriendsTraveling.BusinessLayer.Services.UserAuthorizationService.UserService
+namespace FriendsTraveling.BusinessLayer.Services.UserService
 {
     public interface IUserService
     {
