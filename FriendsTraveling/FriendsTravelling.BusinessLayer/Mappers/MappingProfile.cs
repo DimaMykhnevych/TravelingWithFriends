@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using FriendsTraveling.BusinessLayer.DTOs;
+using FriendsTraveling.BusinessLayer.DTOs.TransportDTOs;
+using FriendsTraveling.DataLayer.Models;
 using FriendsTraveling.DataLayer.Models.User;
 using System;
 using System.Collections.Generic;
@@ -20,6 +22,8 @@ namespace FriendsTraveling.BusinessLayer.Mappers
             CreateMap<UpdateUserModel, AppUser>()
                 .ForMember(u => u.Role, m => m.MapFrom(u => u.Role))
                 .ForMember(u => u.UserName, m => m.MapFrom(u => u.Username));
+
+            CreateMap<Transport, TransportDTO>().ReverseMap();
         }
     }
 }
