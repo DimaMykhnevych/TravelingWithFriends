@@ -2,7 +2,6 @@
 using FriendsTraveling.BusinessLayer.DTOs.LocationDTOs;
 using FriendsTraveling.DataLayer.Models;
 using FriendsTraveling.DataLayer.Repositories.LocationRepository;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
