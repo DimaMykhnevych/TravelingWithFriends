@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace FriendsTraveling.BusinessLayer.Exeptions
+namespace FriendsTraveling.BusinessLayer.Exceptions
 {
     public class InvalidUserPasswordException : Exception
     {

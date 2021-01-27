@@ -1,11 +1,9 @@
 using AutoMapper;
-using FriendsTraveling.BusinessLayer.Factories.AuthTokenFactory;
 using FriendsTraveling.BusinessLayer.Mappers;
-using FriendsTraveling.BusinessLayer.Services.UserAuthorizationService;
-using FriendsTraveling.BusinessLayer.Services.UserService;
 using FriendsTraveling.DataLayer.DbContext;
 using FriendsTraveling.DataLayer.Models.Auth;
 using FriendsTraveling.DataLayer.Models.User;
+using FriendsTraveling.Extensions;
 using FriendsTraveling.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -89,10 +87,9 @@ namespace FriendsTraveling
 
             services.AddAuthorization();
 
-            services.AddTransient<IAuthTokenFactory, AuthTokenFactory>();
+            services.AddBusinessComponents();
 
-            services.AddTransient<BaseAuthorizationService, AppUserAuthorizationService>();
-            services.AddTransient<IUserService, UserService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

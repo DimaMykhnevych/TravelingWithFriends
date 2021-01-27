@@ -4,14 +4,16 @@ using FriendsTraveling.DataLayer.DbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FriendsTraveling.DataLayer.Migrations
 {
     [DbContext(typeof(TravelingDbContext))]
-    partial class TravelingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210127092053_AddJourneysAndUserJourneysTables")]
+    partial class AddJourneysAndUserJourneysTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,104 +50,12 @@ namespace FriendsTraveling.DataLayer.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("RouteId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RouteId");
-
-                    b.ToTable("Journeys");
-                });
-
-            modelBuilder.Entity("FriendsTraveling.DataLayer.Models.Location", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
-
-                    b.Property<string>("Country")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Latitude")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Longtitude")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Locations");
-                });
-
-            modelBuilder.Entity("FriendsTraveling.DataLayer.Models.Route", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
-
-                    b.Property<int>("TransportId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TransportId");
-
-                    b.ToTable("Routes");
-                });
-
-            modelBuilder.Entity("FriendsTraveling.DataLayer.Models.RouteLocation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
-
-                    b.Property<int>("LocationId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LocationOrder")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RouteId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LocationId");
-
-                    b.HasIndex("RouteId");
-
-                    b.ToTable("RouteLocations");
-                });
-
-            modelBuilder.Entity("FriendsTraveling.DataLayer.Models.Transport", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Transports");
+                    b.ToTable("Journey");
                 });
 
             modelBuilder.Entity("FriendsTraveling.DataLayer.Models.User.AppUser", b =>
@@ -275,7 +185,7 @@ namespace FriendsTraveling.DataLayer.Migrations
 
                     b.HasIndex("JourneyId");
 
-                    b.ToTable("UserJourneys");
+                    b.ToTable("UserJourney");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -379,47 +289,6 @@ namespace FriendsTraveling.DataLayer.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("FriendsTraveling.DataLayer.Models.Journey", b =>
-                {
-                    b.HasOne("FriendsTraveling.DataLayer.Models.Route", "Route")
-                        .WithMany("Journeys")
-                        .HasForeignKey("RouteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Route");
-                });
-
-            modelBuilder.Entity("FriendsTraveling.DataLayer.Models.Route", b =>
-                {
-                    b.HasOne("FriendsTraveling.DataLayer.Models.Transport", "Transport")
-                        .WithMany("Routes")
-                        .HasForeignKey("TransportId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Transport");
-                });
-
-            modelBuilder.Entity("FriendsTraveling.DataLayer.Models.RouteLocation", b =>
-                {
-                    b.HasOne("FriendsTraveling.DataLayer.Models.Location", "Location")
-                        .WithMany("RouteLocations")
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FriendsTraveling.DataLayer.Models.Route", "Route")
-                        .WithMany("RouteLocations")
-                        .HasForeignKey("RouteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Location");
-
-                    b.Navigation("Route");
-                });
-
             modelBuilder.Entity("FriendsTraveling.DataLayer.Models.UserJourney", b =>
                 {
                     b.HasOne("FriendsTraveling.DataLayer.Models.User.AppUser", "AppUser")
@@ -493,23 +362,6 @@ namespace FriendsTraveling.DataLayer.Migrations
             modelBuilder.Entity("FriendsTraveling.DataLayer.Models.Journey", b =>
                 {
                     b.Navigation("UserJourneys");
-                });
-
-            modelBuilder.Entity("FriendsTraveling.DataLayer.Models.Location", b =>
-                {
-                    b.Navigation("RouteLocations");
-                });
-
-            modelBuilder.Entity("FriendsTraveling.DataLayer.Models.Route", b =>
-                {
-                    b.Navigation("Journeys");
-
-                    b.Navigation("RouteLocations");
-                });
-
-            modelBuilder.Entity("FriendsTraveling.DataLayer.Models.Transport", b =>
-                {
-                    b.Navigation("Routes");
                 });
 
             modelBuilder.Entity("FriendsTraveling.DataLayer.Models.User.AppUser", b =>

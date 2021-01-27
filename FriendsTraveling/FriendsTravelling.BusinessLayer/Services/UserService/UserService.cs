@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using FriendsTraveling.BusinessLayer.Constants;
 using FriendsTraveling.BusinessLayer.DTOs;
-using FriendsTraveling.BusinessLayer.Exeptions;
+using FriendsTraveling.BusinessLayer.Exceptions;
 using FriendsTraveling.DataLayer.Models.User;
 using Microsoft.AspNetCore.Identity;
 using System;

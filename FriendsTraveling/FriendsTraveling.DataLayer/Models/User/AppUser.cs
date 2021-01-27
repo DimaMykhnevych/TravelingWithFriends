@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
 
 namespace FriendsTraveling.DataLayer.Models.User
 {
@@ -8,5 +9,8 @@ namespace FriendsTraveling.DataLayer.Models.User
         public string City { get; set; }
         public string Country { get; set; }
         public string Role { get; set; }
+
+        public List<UserJourney> UserJourneys { get; set; }
+
     }
 }
