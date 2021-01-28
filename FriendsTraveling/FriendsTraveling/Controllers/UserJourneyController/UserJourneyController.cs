@@ -1,10 +1,7 @@
 ﻿using FriendsTraveling.BusinessLayer.DTOs.UserJourneyDTOs;
 using FriendsTraveling.BusinessLayer.Services.UserJourneyService;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace FriendsTraveling.Controllers.UserJourneyController
