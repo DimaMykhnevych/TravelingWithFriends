@@ -31,7 +31,7 @@ namespace FriendsTraveling.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Post([FromBody] CreateUserModel model)
         {
-            //model.Role = "User";
+            model.Role = "User";
             try
             {
                 return Ok(await _service.CreateUserAsync(model));
