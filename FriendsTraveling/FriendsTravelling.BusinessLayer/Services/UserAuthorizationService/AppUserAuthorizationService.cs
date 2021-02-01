@@ -59,7 +59,7 @@ namespace FriendsTraveling.BusinessLayer.Services.UserAuthorizationService
             UserAuthInfo info = new UserAuthInfo
             {
                 UserId = user.Id,
-                UserName = user.UserName,
+                Username = user.UserName,
                 Role = user.Role,
                 City = user.City,
                 Country = user.Country,
