@@ -24,7 +24,6 @@ namespace FriendsTraveling.Controllers.Auth
         public async Task<IActionResult> Login([FromBody] AuthSignInModel model)
         {
             JWTTokenStatusResult result = await _authorizationService.GenerateTokenAsync(model);
-            if (!result.IsAuthorized) { return Unauthorized(); }
 
             return Ok(result);
         }
