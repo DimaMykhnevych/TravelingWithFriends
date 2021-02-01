@@ -81,6 +81,7 @@ namespace FriendsTraveling
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
                     ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero,
                 };
             });
 

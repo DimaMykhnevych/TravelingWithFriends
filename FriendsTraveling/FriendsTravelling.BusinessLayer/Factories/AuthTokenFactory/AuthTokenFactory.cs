@@ -31,7 +31,7 @@ namespace FriendsTraveling.BusinessLayer.Factories.AuthTokenFactory
                 issuer: issuer,
                 audience: audience,
                 claims: claims,
-                expires: DateTime.UtcNow.AddDays(7),
+                expires: DateTime.UtcNow.AddDays(1),
                 signingCredentials: signinCredentials);
 
             return jwtSecurityToken;

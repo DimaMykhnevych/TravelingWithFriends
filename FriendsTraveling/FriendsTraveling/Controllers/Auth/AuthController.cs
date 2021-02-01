@@ -1,5 +1,6 @@
 ﻿using FriendsTraveling.BusinessLayer.Services.UserAuthorizationService;
 using FriendsTraveling.DataLayer.Models.Auth;
+using FriendsTraveling.DataLayer.Models.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -30,6 +31,7 @@ namespace FriendsTraveling.Controllers.Auth
 
         [HttpGet]
         [Route("user-info")]
+        [Authorize(Roles = Role.User + "," + Role.Admin)]
         public async Task<IActionResult> GetUserInfo()
         {
             string currentUserName = User.Identity.Name;
