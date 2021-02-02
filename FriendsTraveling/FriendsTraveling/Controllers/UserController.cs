@@ -1,5 +1,5 @@
 ﻿using FriendsTraveling.BusinessLayer.Constants;
-using FriendsTraveling.BusinessLayer.DTOs;
+using FriendsTraveling.BusinessLayer.DTOs.UserDTOs;
 using FriendsTraveling.BusinessLayer.Exceptions;
 using FriendsTraveling.BusinessLayer.Services.UserService;
 using FriendsTraveling.DataLayer.Models.User;
@@ -43,11 +43,11 @@ namespace FriendsTraveling.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Put([FromBody] UpdateUserModel model)
+        public async Task<IActionResult> UpdateUserProfile([FromBody] UpdateUserProfileDTO userProfileDTO)
         {
             try
             {
-                return Ok(await _service.UpdateUserAsync(model));
+                return Ok(await _service.UpdateUserProfileAsync(userProfileDTO));
             }
             catch (InvalidUserPasswordException)
             {
@@ -58,6 +58,21 @@ namespace FriendsTraveling.Controllers
                 return BadRequest(AddModelStateError("username", ErrorMessagesConstants.USERNAME_ALREADY_TAKEN));
             }
         }
+        //public async Task<IActionResult> Put([FromBody] UpdateUserModel model)
+        //{
+        //    try
+        //    {
+        //        return Ok(await _service.UpdateUserAsync(model));
+        //    }
+        //    catch (InvalidUserPasswordException)
+        //    {
+        //        return BadRequest(AddModelStateError("password", ErrorMessagesConstants.INVALID_PASSWORD));
+        //    }
+        //    catch (UsernameAlreadyTakenException)
+        //    {
+        //        return BadRequest(AddModelStateError("username", ErrorMessagesConstants.USERNAME_ALREADY_TAKEN));
+        //    }
+        //}
 
 
         [HttpDelete("{id}")]

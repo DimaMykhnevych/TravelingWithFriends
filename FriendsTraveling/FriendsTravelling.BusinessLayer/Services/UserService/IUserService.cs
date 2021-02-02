@@ -1,8 +1,5 @@
-﻿using FriendsTraveling.BusinessLayer.DTOs;
+﻿using FriendsTraveling.BusinessLayer.DTOs.UserDTOs;
 using FriendsTraveling.DataLayer.Models.User;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FriendsTraveling.BusinessLayer.Services.UserService
@@ -12,6 +9,7 @@ namespace FriendsTraveling.BusinessLayer.Services.UserService
         Task<AppUser> GetUserByUsername(string username);
         Task<AppUser> CreateUserAsync(CreateUserModel userModel);
         Task<AppUser> UpdateUserAsync(UpdateUserModel userModel);
+        Task<AppUser> UpdateUserProfileAsync(UpdateUserProfileDTO userProfileDTO);
         Task DeleteUser(int userId);
     }
 }

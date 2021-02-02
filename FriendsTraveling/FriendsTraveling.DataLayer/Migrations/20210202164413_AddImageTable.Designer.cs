@@ -4,14 +4,16 @@ using FriendsTraveling.DataLayer.DbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FriendsTraveling.DataLayer.Migrations
 {
     [DbContext(typeof(TravelingDbContext))]
-    partial class TravelingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210202164413_AddImageTable")]
+    partial class AddImageTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -26,9 +28,6 @@ namespace FriendsTraveling.DataLayer.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<int>("AppUserId")
-                        .HasColumnType("int");
-
                     b.Property<byte[]>("ImageData")
                         .HasColumnType("varbinary(max)");
 
@@ -36,9 +35,6 @@ namespace FriendsTraveling.DataLayer.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AppUserId")
-                        .IsUnique();
 
                     b.ToTable("Images");
                 });
@@ -403,17 +399,6 @@ namespace FriendsTraveling.DataLayer.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("FriendsTraveling.DataLayer.Models.Image", b =>
-                {
-                    b.HasOne("FriendsTraveling.DataLayer.Models.User.AppUser", "AppUser")
-                        .WithOne("ProfileImage")
-                        .HasForeignKey("FriendsTraveling.DataLayer.Models.Image", "AppUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AppUser");
-                });
-
             modelBuilder.Entity("FriendsTraveling.DataLayer.Models.Journey", b =>
                 {
                     b.HasOne("FriendsTraveling.DataLayer.Models.Route", "Route")
@@ -549,8 +534,6 @@ namespace FriendsTraveling.DataLayer.Migrations
 
             modelBuilder.Entity("FriendsTraveling.DataLayer.Models.User.AppUser", b =>
                 {
-                    b.Navigation("ProfileImage");
-
                     b.Navigation("UserJourneys");
                 });
 #pragma warning restore 612, 618

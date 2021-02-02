@@ -18,6 +18,7 @@ namespace FriendsTraveling.DataLayer.DbContext
         public DbSet<Route> Routes { get; set; }
         public DbSet<Location> Locations { get; set; }
         public DbSet<RouteLocation> RouteLocations { get; set; }
+        public DbSet<Image> Images { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)

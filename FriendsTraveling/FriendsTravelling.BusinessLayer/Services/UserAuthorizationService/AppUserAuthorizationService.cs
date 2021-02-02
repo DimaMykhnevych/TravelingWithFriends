@@ -63,7 +63,8 @@ namespace FriendsTraveling.BusinessLayer.Services.UserAuthorizationService
                 Role = user.Role,
                 City = user.City,
                 Country = user.Country,
-                Age = user.Age
+                Age = user.Age,
+                Email = user.Email
             };
 
             return info;

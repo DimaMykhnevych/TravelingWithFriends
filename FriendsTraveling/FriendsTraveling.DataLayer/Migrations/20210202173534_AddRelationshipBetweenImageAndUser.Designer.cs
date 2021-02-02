@@ -4,14 +4,16 @@ using FriendsTraveling.DataLayer.DbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FriendsTraveling.DataLayer.Migrations
 {
     [DbContext(typeof(TravelingDbContext))]
-    partial class TravelingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210202173534_AddRelationshipBetweenImageAndUser")]
+    partial class AddRelationshipBetweenImageAndUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

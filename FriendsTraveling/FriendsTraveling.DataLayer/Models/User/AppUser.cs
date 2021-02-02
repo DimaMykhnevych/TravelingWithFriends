@@ -9,6 +9,7 @@ namespace FriendsTraveling.DataLayer.Models.User
         public string City { get; set; }
         public string Country { get; set; }
         public string Role { get; set; }
+        public Image ProfileImage { get; set; }
 
         public List<UserJourney> UserJourneys { get; set; }
 

@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using FriendsTraveling.BusinessLayer.DTOs;
+using FriendsTraveling.BusinessLayer.DTOs.UserDTOs;
 using FriendsTraveling.BusinessLayer.DTOs.JourneyDTO;
 using FriendsTraveling.BusinessLayer.DTOs.LocationDTOs;
 using FriendsTraveling.BusinessLayer.DTOs.RouteDTOs;
@@ -23,6 +23,8 @@ namespace FriendsTraveling.BusinessLayer.Mappers
 
             CreateMap<UpdateUserModel, AppUser>()
                 .ForMember(u => u.Role, m => m.MapFrom(u => u.Role))
+                .ForMember(u => u.UserName, m => m.MapFrom(u => u.Username));
+            CreateMap<UpdateUserProfileDTO, AppUser>()
                 .ForMember(u => u.UserName, m => m.MapFrom(u => u.Username));
 
             CreateMap<Transport, TransportDTO>().ReverseMap();

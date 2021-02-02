@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using FriendsTraveling.BusinessLayer.Constants;
-using FriendsTraveling.BusinessLayer.DTOs;
+using FriendsTraveling.BusinessLayer.DTOs.UserDTOs;
 using FriendsTraveling.BusinessLayer.Exceptions;
 using FriendsTraveling.DataLayer.Models.User;
 using Microsoft.AspNetCore.Identity;
@@ -39,6 +39,27 @@ namespace FriendsTraveling.BusinessLayer.Services.UserService
             IdentityResult addUserResult = await _userManager.CreateAsync(user, model.Password);
 
             ValidateIdentityResult(addUserResult);
+
+            return await GetUserByUsername(user.UserName);
+        }
+
+        public async Task<AppUser> UpdateUserProfileAsync(UpdateUserProfileDTO userProfileDTO)
+        {
+            AppUser existingUser = await _userManager.FindByNameAsync(userProfileDTO.Username);
+            if (existingUser != null && existingUser.Id != userProfileDTO.Id)
+            {
+                throw new UsernameAlreadyTakenException();
+            }
+
+            AppUser user = await _userManager.FindByIdAsync(userProfileDTO.Id.ToString());
+            if (user == null)
+            {
+                throw new UserNotFoundException();
+            }
+            _mapper.Map(userProfileDTO, user);
+
+            IdentityResult updateUserResult = await _userManager.UpdateAsync(user);
+            ValidateIdentityResult(updateUserResult);
 
             return await GetUserByUsername(user.UserName);
         }
@@ -128,5 +149,7 @@ namespace FriendsTraveling.BusinessLayer.Services.UserService
 
             return errors.Any() ? false : true;
         }
+
+     
     }
 }
