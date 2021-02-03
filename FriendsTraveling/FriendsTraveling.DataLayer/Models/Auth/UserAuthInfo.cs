@@ -9,5 +9,6 @@
         public string Country { get; set; }
         public int Age { get; set; }
         public string Email { get; set; }
+        public string ProfileImagePath { get; set; }
     }
 }

@@ -7,6 +7,7 @@ namespace FriendsTraveling.BusinessLayer.Services.UserService
     public interface IUserService
     {
         Task<AppUser> GetUserByUsername(string username);
+        Task<AppUser> GetUserWithImage(int id);
         Task<AppUser> CreateUserAsync(CreateUserModel userModel);
         Task<AppUser> UpdateUserAsync(UpdateUserModel userModel);
         Task<AppUser> UpdateUserProfileAsync(UpdateUserProfileDTO userProfileDTO);

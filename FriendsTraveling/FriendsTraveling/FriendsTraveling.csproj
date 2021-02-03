@@ -23,5 +23,9 @@
     <ProjectReference Include="..\FriendsTravelling.BusinessLayer\FriendsTraveling.BusinessLayer.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Resources\Images\" />
+  </ItemGroup>
+
 
 </Project>

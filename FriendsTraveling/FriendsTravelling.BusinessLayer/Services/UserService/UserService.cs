@@ -3,6 +3,7 @@ using FriendsTraveling.BusinessLayer.Constants;
 using FriendsTraveling.BusinessLayer.DTOs.UserDTOs;
 using FriendsTraveling.BusinessLayer.Exceptions;
 using FriendsTraveling.DataLayer.Models.User;
+using FriendsTraveling.DataLayer.Repositories.UserRepository;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -15,16 +16,23 @@ namespace FriendsTraveling.BusinessLayer.Services.UserService
     {
         private readonly IMapper _mapper;
         private readonly UserManager<AppUser> _userManager;
+        private readonly IUserRepository _userRepository;
 
-        public UserService(IMapper mapper, UserManager<AppUser> userManager)
+        public UserService(IMapper mapper, UserManager<AppUser> userManager, IUserRepository userRepository)
         {
             _mapper = mapper;
             _userManager = userManager;
+            _userRepository = userRepository;
         }
 
         public async Task<AppUser> GetUserByUsername(string username)
         {
             return await _userManager.FindByNameAsync(username);
+        }
+
+        public async Task<AppUser> GetUserWithImage(int id)
+        {
+            return await _userRepository.GetUserWithImage(id);
         }
 
         public async Task<AppUser> CreateUserAsync(CreateUserModel model)
@@ -150,6 +158,6 @@ namespace FriendsTraveling.BusinessLayer.Services.UserService
             return errors.Any() ? false : true;
         }
 
-     
+      
     }
 }

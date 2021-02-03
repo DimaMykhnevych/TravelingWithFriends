@@ -8,6 +8,7 @@ using FriendsTraveling.BusinessLayer.DTOs.TransportDTOs;
 using FriendsTraveling.BusinessLayer.DTOs.UserJourneyDTOs;
 using FriendsTraveling.DataLayer.Models;
 using FriendsTraveling.DataLayer.Models.User;
+using FriendsTraveling.BusinessLayer.DTOs.ImageDTOs;
 
 namespace FriendsTraveling.BusinessLayer.Mappers
 {
@@ -33,6 +34,7 @@ namespace FriendsTraveling.BusinessLayer.Mappers
             CreateMap<RouteLocation, RouteLocationDTO>().ReverseMap();
             CreateMap<Journey, JourneyDTO>().ReverseMap();
             CreateMap<UserJourney, UserJourneyDTO>().ReverseMap();
+            CreateMap<Image, ImageDTO>().ReverseMap();
         }
     }
 }
