@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
 using FriendsTraveling.BusinessLayer.Constants;
-using FriendsTraveling.BusinessLayer.DTOs;
+using FriendsTraveling.BusinessLayer.DTOs.UserDTOs;
 using FriendsTraveling.BusinessLayer.Exceptions;
 using FriendsTraveling.DataLayer.Models.User;
+using FriendsTraveling.DataLayer.Repositories.UserRepository;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -15,16 +16,23 @@ namespace FriendsTraveling.BusinessLayer.Services.UserService
     {
         private readonly IMapper _mapper;
         private readonly UserManager<AppUser> _userManager;
+        private readonly IUserRepository _userRepository;
 
-        public UserService(IMapper mapper, UserManager<AppUser> userManager)
+        public UserService(IMapper mapper, UserManager<AppUser> userManager, IUserRepository userRepository)
         {
             _mapper = mapper;
             _userManager = userManager;
+            _userRepository = userRepository;
         }
 
         public async Task<AppUser> GetUserByUsername(string username)
         {
             return await _userManager.FindByNameAsync(username);
+        }
+
+        public async Task<AppUser> GetUserWithImage(int id)
+        {
+            return await _userRepository.GetUserWithImage(id);
         }
 
         public async Task<AppUser> CreateUserAsync(CreateUserModel model)
@@ -39,6 +47,27 @@ namespace FriendsTraveling.BusinessLayer.Services.UserService
             IdentityResult addUserResult = await _userManager.CreateAsync(user, model.Password);
 
             ValidateIdentityResult(addUserResult);
+
+            return await GetUserByUsername(user.UserName);
+        }
+
+        public async Task<AppUser> UpdateUserProfileAsync(UpdateUserProfileDTO userProfileDTO)
+        {
+            AppUser existingUser = await _userManager.FindByNameAsync(userProfileDTO.Username);
+            if (existingUser != null && existingUser.Id != userProfileDTO.Id)
+            {
+                throw new UsernameAlreadyTakenException();
+            }
+
+            AppUser user = await _userManager.FindByIdAsync(userProfileDTO.Id.ToString());
+            if (user == null)
+            {
+                throw new UserNotFoundException();
+            }
+            _mapper.Map(userProfileDTO, user);
+
+            IdentityResult updateUserResult = await _userManager.UpdateAsync(user);
+            ValidateIdentityResult(updateUserResult);
 
             return await GetUserByUsername(user.UserName);
         }
@@ -128,5 +157,7 @@ namespace FriendsTraveling.BusinessLayer.Services.UserService
 
             return errors.Any() ? false : true;
         }
+
+      
     }
 }

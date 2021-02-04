@@ -1,4 +1,6 @@
 ﻿using FriendsTraveling.BusinessLayer.Factories.AuthTokenFactory;
+using FriendsTraveling.BusinessLayer.Services.UserService;
+using FriendsTraveling.DataLayer.Models;
 using FriendsTraveling.DataLayer.Models.Auth;
 using FriendsTraveling.DataLayer.Models.User;
 using Microsoft.AspNetCore.Identity;
@@ -12,15 +14,17 @@ namespace FriendsTraveling.BusinessLayer.Services.UserAuthorizationService
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly IUserService _userService;
 
         public AppUserAuthorizationService(
             IAuthTokenFactory tokenFactory,
             UserManager<AppUser> userManager,
-            SignInManager<AppUser> signInManager)
+            SignInManager<AppUser> signInManager, IUserService userService)
             : base(tokenFactory)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _userService = userService;
         }
 
         public override async Task<IEnumerable<Claim>> GetUserClaimsAsync(AuthSignInModel model)
@@ -55,6 +59,17 @@ namespace FriendsTraveling.BusinessLayer.Services.UserAuthorizationService
         public async override Task<UserAuthInfo> GetUserInfoAsync(string userName)
         {
             AppUser user = await _userManager.FindByNameAsync(userName);
+            AppUser userWithImage = await _userService.GetUserWithImage(user.Id);
+            string profileImagePath;
+
+            if (userWithImage.ProfileImage == null)
+            {
+                profileImagePath = "";
+            }
+            else
+            {
+                profileImagePath = userWithImage.ProfileImage.ImagePath;
+            }
 
             UserAuthInfo info = new UserAuthInfo
             {
@@ -63,7 +78,9 @@ namespace FriendsTraveling.BusinessLayer.Services.UserAuthorizationService
                 Role = user.Role,
                 City = user.City,
                 Country = user.Country,
-                Age = user.Age
+                Age = user.Age,
+                Email = user.Email,
+                ProfileImagePath = profileImagePath,
             };
 
             return info;

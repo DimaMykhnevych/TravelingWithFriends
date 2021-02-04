@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using FriendsTraveling.BusinessLayer.DTOs;
+using FriendsTraveling.BusinessLayer.DTOs.UserDTOs;
 using FriendsTraveling.BusinessLayer.DTOs.JourneyDTO;
 using FriendsTraveling.BusinessLayer.DTOs.LocationDTOs;
 using FriendsTraveling.BusinessLayer.DTOs.RouteDTOs;
@@ -8,6 +8,7 @@ using FriendsTraveling.BusinessLayer.DTOs.TransportDTOs;
 using FriendsTraveling.BusinessLayer.DTOs.UserJourneyDTOs;
 using FriendsTraveling.DataLayer.Models;
 using FriendsTraveling.DataLayer.Models.User;
+using FriendsTraveling.BusinessLayer.DTOs.ImageDTOs;
 
 namespace FriendsTraveling.BusinessLayer.Mappers
 {
@@ -24,6 +25,8 @@ namespace FriendsTraveling.BusinessLayer.Mappers
             CreateMap<UpdateUserModel, AppUser>()
                 .ForMember(u => u.Role, m => m.MapFrom(u => u.Role))
                 .ForMember(u => u.UserName, m => m.MapFrom(u => u.Username));
+            CreateMap<UpdateUserProfileDTO, AppUser>()
+                .ForMember(u => u.UserName, m => m.MapFrom(u => u.Username));
 
             CreateMap<Transport, TransportDTO>().ReverseMap();
             CreateMap<Location, LocationDTO>().ReverseMap();
@@ -31,6 +34,7 @@ namespace FriendsTraveling.BusinessLayer.Mappers
             CreateMap<RouteLocation, RouteLocationDTO>().ReverseMap();
             CreateMap<Journey, JourneyDTO>().ReverseMap();
             CreateMap<UserJourney, UserJourneyDTO>().ReverseMap();
+            CreateMap<Image, ImageDTO>().ReverseMap();
         }
     }
 }
