@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FriendsTraveling", "FriendsTraveling\FriendsTraveling.csproj", "{CED3A5B2-27BC-4D94-AE8B-98290652F6EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FriendsTraveling.Web", "FriendsTraveling\FriendsTraveling.Web.csproj", "{CED3A5B2-27BC-4D94-AE8B-98290652F6EC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FriendsTraveling.BusinessLayer", "FriendsTravelling.BusinessLayer\FriendsTraveling.BusinessLayer.csproj", "{7996ED36-4766-47DB-BFDE-A23E73EA3EBB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FriendsTraveling.BusinessLayer", "FriendsTravelling.BusinessLayer\FriendsTraveling.BusinessLayer.csproj", "{7996ED36-4766-47DB-BFDE-A23E73EA3EBB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FriendsTraveling.DataLayer", "FriendsTraveling.DataLayer\FriendsTraveling.DataLayer.csproj", "{F0334129-7F3D-4A9F-9A5D-94C9DF89A458}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FriendsTraveling.DataLayer", "FriendsTraveling.DataLayer\FriendsTraveling.DataLayer.csproj", "{F0334129-7F3D-4A9F-9A5D-94C9DF89A458}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

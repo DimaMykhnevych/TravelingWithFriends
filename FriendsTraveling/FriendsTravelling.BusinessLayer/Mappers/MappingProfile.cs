@@ -1,14 +1,7 @@
 ﻿using AutoMapper;
-using FriendsTraveling.BusinessLayer.DTOs.UserDTOs;
-using FriendsTraveling.BusinessLayer.DTOs.JourneyDTO;
-using FriendsTraveling.BusinessLayer.DTOs.LocationDTOs;
-using FriendsTraveling.BusinessLayer.DTOs.RouteDTOs;
-using FriendsTraveling.BusinessLayer.DTOs.RouteLocationDTOs;
-using FriendsTraveling.BusinessLayer.DTOs.TransportDTOs;
-using FriendsTraveling.BusinessLayer.DTOs.UserJourneyDTOs;
+using FriendsTraveling.BusinessLayer.DTOs;
 using FriendsTraveling.DataLayer.Models;
 using FriendsTraveling.DataLayer.Models.User;
-using FriendsTraveling.BusinessLayer.DTOs.ImageDTOs;
 
 namespace FriendsTraveling.BusinessLayer.Mappers
 {
@@ -22,19 +15,23 @@ namespace FriendsTraveling.BusinessLayer.Mappers
                 .ForMember(u => u.Role, m => m.MapFrom(u => u.Role))
                 .ForMember(u => u.UserName, m => m.MapFrom(u => u.Username));
 
+            //CreateMap<CreateUserRequestModel, CreateUserModel>()
+            //    .ForMember(u => u.Role, m => m.MapFrom(u => u.Role))
+            //    .ForMember(u => u.Username, m => m.MapFrom(u => u.Username));
+
             CreateMap<UpdateUserModel, AppUser>()
                 .ForMember(u => u.Role, m => m.MapFrom(u => u.Role))
                 .ForMember(u => u.UserName, m => m.MapFrom(u => u.Username));
-            CreateMap<UpdateUserProfileDTO, AppUser>()
+            CreateMap<UpdateUserProfileDto, AppUser>()
                 .ForMember(u => u.UserName, m => m.MapFrom(u => u.Username));
 
-            CreateMap<Transport, TransportDTO>().ReverseMap();
-            CreateMap<Location, LocationDTO>().ReverseMap();
-            CreateMap<Route, RouteDTO>().ReverseMap();
-            CreateMap<RouteLocation, RouteLocationDTO>().ReverseMap();
-            CreateMap<Journey, JourneyDTO>().ReverseMap();
-            CreateMap<UserJourney, UserJourneyDTO>().ReverseMap();
-            CreateMap<Image, ImageDTO>().ReverseMap();
+            CreateMap<Transport, TransportDto>().ReverseMap();
+            CreateMap<Location, LocationDto>().ReverseMap();
+            CreateMap<Route, RouteDto>().ReverseMap();
+            CreateMap<RouteLocation, RouteLocationDto>().ReverseMap();
+            CreateMap<Journey, JourneyDto>().ReverseMap();
+            CreateMap<UserJourney, UserJourneyDto>().ReverseMap();
+            CreateMap<Image, ImageDto>().ReverseMap();
         }
     }
 }

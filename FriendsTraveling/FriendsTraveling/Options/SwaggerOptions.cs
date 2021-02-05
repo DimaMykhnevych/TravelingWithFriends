@@ -1,4 +1,4 @@
-﻿namespace FriendsTraveling.Options
+﻿namespace FriendsTraveling.Web.Options
 {
     public class SwaggerOptions
     {

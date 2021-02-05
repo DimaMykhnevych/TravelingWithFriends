@@ -1,11 +1,11 @@
-﻿using FriendsTraveling.BusinessLayer.DTOs.ImageDTOs;
-using FriendsTraveling.BusinessLayer.Services.ImageService;
+﻿using FriendsTraveling.BusinessLayer.DTOs;
+using FriendsTraveling.BusinessLayer.Services.Abstract;
 using FriendsTraveling.DataLayer.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
-namespace FriendsTraveling.Controllers
+namespace FriendsTraveling.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -23,7 +23,7 @@ namespace FriendsTraveling.Controllers
             string currentUserName = User.Identity.Name;
 
             IFormCollection formCollection = await Request.ReadFormAsync();
-            ImageDTO image = await _imageService.UploadImage(formCollection, currentUserName);
+            ImageDto image = await _imageService.UploadImage(formCollection, currentUserName);
             if (image != null)
                 return Ok(image);
             return BadRequest();

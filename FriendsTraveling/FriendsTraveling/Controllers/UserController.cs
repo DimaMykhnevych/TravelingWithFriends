@@ -1,7 +1,7 @@
 ﻿using FriendsTraveling.BusinessLayer.Constants;
-using FriendsTraveling.BusinessLayer.DTOs.UserDTOs;
+using FriendsTraveling.BusinessLayer.DTOs;
 using FriendsTraveling.BusinessLayer.Exceptions;
-using FriendsTraveling.BusinessLayer.Services.UserService;
+using FriendsTraveling.BusinessLayer.Services.Abstract;
 using FriendsTraveling.DataLayer.Models.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Threading.Tasks;
 
-namespace FriendsTraveling.Controllers
+namespace FriendsTraveling.Web.Controllers
 {
     [Route("api/[controller]")]
     
@@ -43,7 +43,7 @@ namespace FriendsTraveling.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateUserProfile([FromBody] UpdateUserProfileDTO userProfileDTO)
+        public async Task<IActionResult> UpdateUserProfile([FromBody] UpdateUserProfileDto userProfileDTO)
         {
             try
             {
