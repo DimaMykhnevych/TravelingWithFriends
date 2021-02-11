@@ -23,9 +23,10 @@ namespace FriendsTraveling.DataLayer.Repositories.Concrete
             return Context.Set<TEntity>().ToList();
         }
 
-        public async Task Insert(TEntity entity)
+        public async Task<TEntity> Insert(TEntity entity)
         {
             await Context.Set<TEntity>().AddAsync(entity);
+            return entity;
         }
 
         public async Task Delete(TEntity entity)

@@ -19,6 +19,8 @@ namespace FriendsTraveling.BusinessLayer.Mappers
             //    .ForMember(u => u.Role, m => m.MapFrom(u => u.Role))
             //    .ForMember(u => u.Username, m => m.MapFrom(u => u.Username));
 
+          
+
             CreateMap<UpdateUserModel, AppUser>()
                 .ForMember(u => u.Role, m => m.MapFrom(u => u.Role))
                 .ForMember(u => u.UserName, m => m.MapFrom(u => u.Username));

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace FriendsTraveling.BusinessLayer.DTOs
@@ -32,5 +33,9 @@ namespace FriendsTraveling.BusinessLayer.DTOs
         public int AvailablePlaces { get; set; }
 
         public int RouteId { get; set; }
+
+        public RouteDto Route { get; set; }
+
+        public List<UserJourneyDto> UserJourneys { get; set; }
     }
 }

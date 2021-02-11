@@ -11,9 +11,11 @@ namespace FriendsTraveling.Web.Controllers
     public class JourneyController : ControllerBase
     {
         private readonly IJourneyService _journeyService;
-        public JourneyController(IJourneyService journeyService)
+        private readonly IAddJourneyService _addJourneyService;
+        public JourneyController(IJourneyService journeyService, IAddJourneyService addJourneyService)
         {
             _journeyService = journeyService;
+            _addJourneyService = addJourneyService;
         }
 
         [HttpGet]
@@ -33,9 +35,9 @@ namespace FriendsTraveling.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddJourney([FromBody] JourneyDto journeyDTO)
+        public async Task<IActionResult> AddJourney([FromBody] AddJourneyDto journeyDTO)
         {
-            JourneyDto added = await _journeyService.AddJourney(journeyDTO);
+            JourneyDto added = await _addJourneyService.AddJourney(journeyDTO, User.Identity.Name);
             if (added == null)
                 return BadRequest();
             return Ok(added);

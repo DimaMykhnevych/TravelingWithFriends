@@ -25,6 +25,7 @@ namespace FriendsTraveling.Web.Installers
             services.AddTransient<IJourneyService, JourneyService>();
             services.AddTransient<IUserJourneyService, UserJourneyService>();
             services.AddTransient<IImageService, ImageService>();
+            services.AddTransient<IAddJourneyService, AddJourneyService>();
 
 
 

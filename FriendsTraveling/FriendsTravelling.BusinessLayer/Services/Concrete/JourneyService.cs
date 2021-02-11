@@ -22,7 +22,7 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
         public async Task<JourneyDto> AddJourney(JourneyDto journeyDTO)
         {
             Journey journey = _mapper.Map<Journey>(journeyDTO);
-            await _journeyRepository.Insert(journey);
+            var j = await _journeyRepository.Insert(journey);
             await _journeyRepository.Save();
 
             return _mapper.Map<JourneyDto>(journey);
