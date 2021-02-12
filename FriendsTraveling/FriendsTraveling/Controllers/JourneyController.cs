@@ -19,9 +19,17 @@ namespace FriendsTraveling.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetJourneys()
+        public async Task<IActionResult> GetJourneys([FromQuery] bool isForCurrentUser)
         {
-            IEnumerable<JourneyDto> journey = await _journeyService.GetJourneys();
+            IEnumerable<JourneyDto> journey;
+            if (isForCurrentUser)
+            {
+               journey = await _journeyService.GetCurrentUserJourneys(User.Identity.Name);
+            }
+            else
+            {
+                journey = await _journeyService.GetJourneys();
+            }
             return Ok(journey);
         }
 
