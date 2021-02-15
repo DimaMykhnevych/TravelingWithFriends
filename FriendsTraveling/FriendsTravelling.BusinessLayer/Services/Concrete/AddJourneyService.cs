@@ -22,30 +22,18 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
             _journeyService = journeyService;
             _userManager = userManager;
         }
-        public async Task<JourneyDto> AddJourney(AddJourneyDto addJourneyDto, string currentUserName)
+        public async Task<JourneyDto> AddJourney(JourneyDto addJourneyDto, string currentUserName)
         {
-            JourneyDto journey = addJourneyDto.Journey;
-            List<LocationDto> locations = addJourneyDto.Locations.ToList();
-            TransportDto transport = addJourneyDto.Transport;
+            JourneyDto journey = addJourneyDto;
 
             AppUser currentUser = await _userManager.FindByNameAsync(currentUserName);
             journey.OrganizerId = currentUser.Id;
             journey.UserJourneys = new List<UserJourneyDto>
             { new UserJourneyDto { AppUser = currentUser, Journey = journey } };
 
-            RouteDto route = new RouteDto() { Transport = transport };
-
-            journey.Route = route;
-
-            transport.Routes = new List<RouteDto>();
-
-            RouteLocationDto[] routeLocations = new RouteLocationDto[locations.Count];
-            route.RouteLocations = routeLocations.ToList();
-            for (int i = 0; i < locations.Count; i++)
+            for (int i = 0; i < journey.Route.RouteLocations.Count; i++)
             {
-                route.RouteLocations[i] = new RouteLocationDto();
-                route.RouteLocations[i].Location = locations[i];
-                route.RouteLocations[i].LocationOrder = i + 1;
+                journey.Route.RouteLocations[i].LocationOrder = i + 1;
             }
 
             return await _journeyService.AddJourney(journey);

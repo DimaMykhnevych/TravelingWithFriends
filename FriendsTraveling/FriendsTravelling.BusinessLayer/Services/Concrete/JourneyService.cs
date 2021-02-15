@@ -60,7 +60,7 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
 
         public async Task<JourneyDto> GetJourneyById(int id)
         {
-            Journey journey = await _journeyRepository.Get(id);
+            Journey journey = await _journeyRepository.GetJourneyWithRoutesById(id);
             return _mapper.Map<JourneyDto>(journey);
         }
 
@@ -77,12 +77,30 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
             return _mapper.Map<IEnumerable<JourneyDto>>(journeys);
         }
 
-        public async Task<JourneyDto> UpdateJourney(int id, JourneyDto journeyDTO)
+        public async Task<JourneyDto> UpdateJourney(int id, JourneyDto journeyDTO, string currentUserName)
         {
             Journey journey = _mapper.Map<Journey>(journeyDTO);
-            journey.Id = id;
             await _journeyRepository.Update(journey);
+            await DeleteRemovedJourneys(journeyDTO);
             return _mapper.Map<JourneyDto>(journey);
+        }
+
+        private async Task DeleteRemovedJourneys(JourneyDto journeyDTO)
+        {
+            Journey beforeUpdateJourney = await _journeyRepository.GetJourneyWithRoutesById(journeyDTO.Id);
+            int locationsCount = beforeUpdateJourney.Route.RouteLocations.Count;
+            int locationDifference = locationsCount - journeyDTO.Route.RouteLocations.Count;
+            if (locationDifference > 0)
+            {
+                foreach (var rl in beforeUpdateJourney.Route.RouteLocations)
+                {
+                    if (!journeyDTO.Route.RouteLocations.Exists(r => r.LocationId == rl.LocationId))
+                    {
+                        await _locationRepository.Delete(rl.Location);
+                    }
+                }
+                await _locationRepository.Save();
+            }
         }
     }
 }

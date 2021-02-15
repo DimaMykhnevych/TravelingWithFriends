@@ -5,6 +5,6 @@ namespace FriendsTraveling.BusinessLayer.Services.Abstract
 {
     public interface IAddJourneyService
     {
-        Task<JourneyDto> AddJourney(AddJourneyDto journey, string currentUserName);
+        Task<JourneyDto> AddJourney(JourneyDto journey, string currentUserName);
     }
 }
