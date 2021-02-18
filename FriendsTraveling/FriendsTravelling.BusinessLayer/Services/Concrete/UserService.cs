@@ -28,7 +28,12 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
 
         public async Task<AppUser> GetUserByUsername(string username)
         {
-            return await _userManager.FindByNameAsync(username);
+            AppUser user = await _userManager.FindByNameAsync(username);
+            return await _userRepository.GetAllUserInfoById(user.Id);
+        }
+        public async Task<AppUser> GetAllUserInfoById(int id)
+        {
+            return await _userRepository.GetAllUserInfoById(id);
         }
 
         public async Task<AppUser> GetUserWithImage(int id)

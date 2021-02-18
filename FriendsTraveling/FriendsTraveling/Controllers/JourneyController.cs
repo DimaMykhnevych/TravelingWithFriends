@@ -28,7 +28,7 @@ namespace FriendsTraveling.Web.Controllers
             }
             else
             {
-                journey = await _journeyService.GetJourneys();
+                journey = await _journeyService.GetAllJourneysExceptCurrentUser(User.Identity.Name);
             }
             return Ok(journey);
         }

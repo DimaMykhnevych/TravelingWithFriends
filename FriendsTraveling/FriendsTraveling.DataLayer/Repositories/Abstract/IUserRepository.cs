@@ -6,5 +6,6 @@ namespace FriendsTraveling.DataLayer.Repositories.Abstract
     public interface IUserRepository : IRepository<AppUser>
     {
         Task<AppUser> GetUserWithImage(int id);
+        Task<AppUser> GetAllUserInfoById(int id);
     }
 }

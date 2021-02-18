@@ -7,7 +7,7 @@ namespace FriendsTraveling.BusinessLayer.Services.Abstract
     public interface IJourneyService
     {
         Task<JourneyDto> GetJourneyById(int id);
-        Task<IEnumerable<JourneyDto>> GetJourneys();
+        Task<IEnumerable<JourneyDto>> GetAllJourneysExceptCurrentUser(string username);
         Task<IEnumerable<JourneyDto>> GetCurrentUserJourneys(string username);
         Task<JourneyDto> AddJourney(JourneyDto journeyDTO);
         Task<JourneyDto> UpdateJourney(int id, JourneyDto journeyDTO, string username);

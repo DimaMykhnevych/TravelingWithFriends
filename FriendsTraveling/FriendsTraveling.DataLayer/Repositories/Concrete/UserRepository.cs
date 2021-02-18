@@ -10,6 +10,18 @@ namespace FriendsTraveling.DataLayer.Repositories.Concrete
     {
         public UserRepository(TravelingDbContext context) : base(context) { }
 
+        public Task<AppUser> GetAllUserInfoById(int id)
+        {
+            return Context.AppUsers
+                .Include(u => u.ProfileImage)
+                .Include(u => u.UserJourneys)
+                .ThenInclude(u => u.Journey)
+                .ThenInclude(j => j.Route)
+                .ThenInclude(j => j.RouteLocations)
+                .ThenInclude(r => r.Location)
+                .FirstOrDefaultAsync(u => u.Id == id);
+        }
+
         public async Task<AppUser> GetUserWithImage(int id)
         {
             return await Context.AppUsers.Include(u => u.ProfileImage).

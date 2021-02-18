@@ -21,10 +21,28 @@ namespace FriendsTraveling.Web.Controllers
             _service = service;
         }
 
-        [HttpGet("{username}")]
-        public async Task<IActionResult> Get(string username)
+        //[HttpGet("{username}")]
+        //public async Task<IActionResult> Get(string username)
+        //{
+        //    return Ok(await _service.GetUserByUsername(username));
+        //}
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
         {
-            return Ok(await _service.GetUserByUsername(username));
+            if (id != 0)
+            {
+                AppUser user = await _service.GetAllUserInfoById(id);
+                if (user != null)
+                {
+                    return Ok(user);
+                }
+            }
+            else
+            {
+                AppUser user = await _service.GetUserByUsername(User.Identity.Name);
+                return Ok(user);
+            }
+            return NotFound();
         }
 
         [HttpPost]

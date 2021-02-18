@@ -71,9 +71,10 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
             return _mapper.Map<IEnumerable<JourneyDto>>(journeys);
         }
 
-        public async Task<IEnumerable<JourneyDto>> GetJourneys()
+        public async Task<IEnumerable<JourneyDto>> GetAllJourneysExceptCurrentUser(string username)
         {
-            IEnumerable<Journey> journeys = await _journeyRepository.GetAll();
+            AppUser currentUser = await _userManager.FindByNameAsync(username);
+            IEnumerable<Journey> journeys = await _journeyRepository.GetAllJourneysExceptCurrentUser(currentUser.Id);
             return _mapper.Map<IEnumerable<JourneyDto>>(journeys);
         }
 
