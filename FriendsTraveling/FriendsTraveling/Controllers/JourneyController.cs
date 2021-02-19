@@ -1,7 +1,10 @@
-﻿using FriendsTraveling.BusinessLayer.DTOs;
+﻿using FriendsTraveling.BusinessLayer.Constants;
+using FriendsTraveling.BusinessLayer.DTOs;
 using FriendsTraveling.BusinessLayer.Services.Abstract;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace FriendsTraveling.Web.Controllers
@@ -19,17 +22,11 @@ namespace FriendsTraveling.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetJourneys([FromQuery] bool isForCurrentUser)
+        public IActionResult GetJourneys([FromQuery] SearchJourneyDto searchJourneyDto)
         {
-            IEnumerable<JourneyDto> journey;
-            if (isForCurrentUser)
-            {
-               journey = await _journeyService.GetCurrentUserJourneys(User.Identity.Name);
-            }
-            else
-            {
-                journey = await _journeyService.GetAllJourneysExceptCurrentUser(User.Identity.Name);
-            }
+            int userId = Convert.ToInt32(User.FindFirstValue(AuthorizationConstants.ID));
+            searchJourneyDto.UserId = userId;
+            IEnumerable<JourneyDto> journey = _journeyService.SearchJourney(searchJourneyDto);
             return Ok(journey);
         }
 

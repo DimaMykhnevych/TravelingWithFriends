@@ -1,4 +1,5 @@
-﻿using FriendsTraveling.BusinessLayer.Factories.AuthTokenFactory;
+﻿using FriendsTraveling.BusinessLayer.Constants;
+using FriendsTraveling.BusinessLayer.Factories.AuthTokenFactory;
 using FriendsTraveling.BusinessLayer.Services.Abstract;
 using FriendsTraveling.DataLayer.Models.Auth;
 using FriendsTraveling.DataLayer.Models.User;
@@ -38,6 +39,7 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
             return new List<Claim>()
             {
                 new Claim(ClaimTypes.Name, user.UserName.ToString()),
+                new Claim(AuthorizationConstants.ID, user.Id.ToString()),
                 new Claim(ClaimTypes.Role, user.Role)
             };
         }

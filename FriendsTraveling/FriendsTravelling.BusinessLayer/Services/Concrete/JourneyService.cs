@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using FriendsTraveling.BusinessLayer.DTOs;
 using FriendsTraveling.BusinessLayer.Services.Abstract;
+using FriendsTraveling.DataLayer.Builders.Abstract;
 using FriendsTraveling.DataLayer.Models;
 using FriendsTraveling.DataLayer.Models.User;
 using FriendsTraveling.DataLayer.Repositories.Abstract;
 using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FriendsTraveling.BusinessLayer.Services.Concrete
@@ -16,19 +18,22 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
         private readonly ITransportRepository _transportRepository;
         private readonly ILocationRepository _locationRepository;
         private readonly IMapper _mapper;
+        private readonly IJourneySearchQueryBuilder _query;
         private readonly UserManager<AppUser> _userManager;
 
         public JourneyService(IJourneyRepository journeyRepository,
             IMapper mapper,
-            UserManager<AppUser> userManager, 
+            UserManager<AppUser> userManager,
             ITransportRepository transportRepository,
-            ILocationRepository locationRepository)
+            ILocationRepository locationRepository,
+            IJourneySearchQueryBuilder query)
         {
             _journeyRepository = journeyRepository;
             _mapper = mapper;
             _userManager = userManager;
             _transportRepository = transportRepository;
             _locationRepository = locationRepository;
+            _query = query;
 
         }
 
@@ -48,7 +53,7 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
                 return false;
             await _journeyRepository.Delete(journeyToDelete);
             await _transportRepository.Delete(journeyToDelete.Route.Transport);
-            foreach(var location in journeyToDelete.Route.RouteLocations)
+            foreach (var location in journeyToDelete.Route.RouteLocations)
             {
                 await _locationRepository.Delete(location.Location);
             }
@@ -64,26 +69,24 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
             return _mapper.Map<JourneyDto>(journey);
         }
 
-        public async Task<IEnumerable<JourneyDto>> GetCurrentUserJourneys(string username)
-        {
-            AppUser currentUser = await _userManager.FindByNameAsync(username);
-            IEnumerable<Journey> journeys = await _journeyRepository.GetCurrentUserJourneys(currentUser.Id);
-            return _mapper.Map<IEnumerable<JourneyDto>>(journeys);
-        }
-
-        public async Task<IEnumerable<JourneyDto>> GetAllJourneysExceptCurrentUser(string username)
-        {
-            AppUser currentUser = await _userManager.FindByNameAsync(username);
-            IEnumerable<Journey> journeys = await _journeyRepository.GetAllJourneysExceptCurrentUser(currentUser.Id);
-            return _mapper.Map<IEnumerable<JourneyDto>>(journeys);
-        }
-
         public async Task<JourneyDto> UpdateJourney(int id, JourneyDto journeyDTO, string currentUserName)
         {
             Journey journey = _mapper.Map<Journey>(journeyDTO);
             await _journeyRepository.UpdateJourney(journey);
             await DeleteRemovedJourneys(journeyDTO);
             return _mapper.Map<JourneyDto>(journey);
+        }
+
+        public IEnumerable<JourneyDto> SearchJourney(SearchJourneyDto parameters)
+        {
+            List<Journey> journeys =
+                _query.SetBaseJourneyInfo()
+                .GetJourneysDependsOnCurrentUser(parameters.UserId, parameters.IsForCurrentUser)
+                .SetJourneyPrice(parameters.StartPrice, parameters.EndPrice)
+                .Build()
+                .ToList();
+            return _mapper.Map<IEnumerable<JourneyDto>>(journeys);
+
         }
 
         private async Task DeleteRemovedJourneys(JourneyDto journeyDTO)

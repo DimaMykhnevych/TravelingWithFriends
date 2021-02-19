@@ -1,6 +1,8 @@
 ﻿using FriendsTraveling.BusinessLayer.Factories.AuthTokenFactory;
 using FriendsTraveling.BusinessLayer.Services.Abstract;
 using FriendsTraveling.BusinessLayer.Services.Concrete;
+using FriendsTraveling.DataLayer.Builders.Abstract;
+using FriendsTraveling.DataLayer.Builders.Concrete;
 using FriendsTraveling.DataLayer.Repositories.Abstract;
 using FriendsTraveling.DataLayer.Repositories.Concrete;
 using Microsoft.Extensions.Configuration;
@@ -27,7 +29,8 @@ namespace FriendsTraveling.Web.Installers
             services.AddTransient<IImageService, ImageService>();
             services.AddTransient<IAddJourneyService, AddJourneyService>();
 
-
+            //builders
+            services.AddTransient<IJourneySearchQueryBuilder, JourneySearchQueryBuilder>();
 
 
             //repositories
