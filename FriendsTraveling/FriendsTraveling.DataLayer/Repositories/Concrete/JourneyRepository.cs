@@ -14,18 +14,18 @@ namespace FriendsTraveling.DataLayer.Repositories.Concrete
 
         public async Task<IEnumerable<Journey>> GetAllJourneysExceptCurrentUser(int userId)
         {
-            return await
-                 GetFullJourneyInfo()
-                .Where(j => j.OrganizerId != userId)
-                .ToListAsync();
+            return await 
+               GetFullJourneyInfo()
+              .Where(j => j.OrganizerId != userId)
+              .ToListAsync();
         }
 
         public async Task<IEnumerable<Journey>> GetCurrentUserJourneys(int userId)
         {
-            return await 
-                 GetFullJourneyInfo()
-                .Where(j => j.OrganizerId == userId)
-                .ToListAsync();
+            return await
+               GetFullJourneyInfo()
+              .Where(j => j.OrganizerId == userId)
+              .ToListAsync();
         }
 
         public async Task<Journey> GetJourneyWithRoutesById(int id)
@@ -35,9 +35,15 @@ namespace FriendsTraveling.DataLayer.Repositories.Concrete
                 .SingleOrDefaultAsync(j => j.Id == id);
         }
 
+        public async Task UpdateJourney(Journey journey)
+        {
+            Context.Journeys.Update(journey);
+            await Context.SaveChangesAsync();
+        }
+
         private IQueryable<Journey> GetFullJourneyInfo()
         {
-            return  Context.Journeys
+            return Context.Journeys
               .Include(j => j.Route)
               .Include(j => j.UserJourneys)
               .ThenInclude(uj => uj.AppUser)

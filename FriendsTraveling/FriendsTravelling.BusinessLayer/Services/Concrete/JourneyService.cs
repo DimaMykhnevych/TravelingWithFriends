@@ -81,7 +81,7 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
         public async Task<JourneyDto> UpdateJourney(int id, JourneyDto journeyDTO, string currentUserName)
         {
             Journey journey = _mapper.Map<Journey>(journeyDTO);
-            await _journeyRepository.Update(journey);
+            await _journeyRepository.UpdateJourney(journey);
             await DeleteRemovedJourneys(journeyDTO);
             return _mapper.Map<JourneyDto>(journey);
         }

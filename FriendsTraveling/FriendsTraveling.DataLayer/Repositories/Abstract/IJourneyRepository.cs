@@ -8,6 +8,7 @@ namespace FriendsTraveling.DataLayer.Repositories.Abstract
     {
         Task<IEnumerable<Journey>> GetAllJourneysExceptCurrentUser(int userId);
         Task<IEnumerable<Journey>> GetCurrentUserJourneys(int userId);
+        Task UpdateJourney(Journey journey);
         Task<Journey> GetJourneyWithRoutesById(int id);
     }
 }

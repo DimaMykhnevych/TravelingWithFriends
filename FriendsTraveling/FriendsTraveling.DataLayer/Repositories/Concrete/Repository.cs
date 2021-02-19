@@ -1,7 +1,7 @@
 ﻿using FriendsTraveling.DataLayer.DbContext;
 using FriendsTraveling.DataLayer.Repositories.Abstract;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace FriendsTraveling.DataLayer.Repositories.Concrete
@@ -15,12 +15,12 @@ namespace FriendsTraveling.DataLayer.Repositories.Concrete
         }
         public async Task<TEntity> Get(int id)
         {
-            return Context.Set<TEntity>().Find(id);
+            return await Context.Set<TEntity>().FindAsync(id);
         }
 
         public async Task<IEnumerable<TEntity>> GetAll()
         {
-            return Context.Set<TEntity>().ToList();
+            return await Context.Set<TEntity>().ToListAsync();
         }
 
         public async Task<TEntity> Insert(TEntity entity)
@@ -37,7 +37,7 @@ namespace FriendsTraveling.DataLayer.Repositories.Concrete
         public async Task Update(TEntity entity)
         {
             //Context.Entry(entity).State = EntityState.Modified;
-            Context.Update(entity);
+            Context.Set<TEntity>().Update(entity);
             await Save();
         }
 
