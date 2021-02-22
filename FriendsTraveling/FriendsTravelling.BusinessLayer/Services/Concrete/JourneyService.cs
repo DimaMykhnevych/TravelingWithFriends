@@ -83,6 +83,7 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
                 _query.SetBaseJourneyInfo()
                 .GetJourneysDependsOnCurrentUser(parameters.UserId, parameters.IsForCurrentUser)
                 .SetJourneyPrice(parameters.StartPrice, parameters.EndPrice)
+                .SetJourneyRequiredAge(parameters.MinAge, parameters.MaxAge)
                 .Build()
                 .ToList();
             return _mapper.Map<IEnumerable<JourneyDto>>(journeys);

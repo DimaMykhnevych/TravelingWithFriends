@@ -63,5 +63,24 @@ namespace FriendsTraveling.DataLayer.Builders.Concrete
             }
             return this;
         }
+
+        public IJourneySearchQueryBuilder SetJourneyRequiredAge(int? minAge, int? maxAge)
+        {
+
+            if (minAge == null && maxAge != null)
+            {
+                _query = _query.Where(j => j.MaximumRequiredAge <= maxAge);
+            }
+            else if (maxAge == null && minAge != null)
+            {
+                _query = _query.Where(j => j.MinimumRequiredAge >= minAge);
+            }
+            else if (maxAge != null && minAge != null)
+            {
+                _query = _query.Where(j => j.MinimumRequiredAge >= minAge
+               && j.MaximumRequiredAge <= maxAge);
+            }
+            return this;
+        }
     }
 }

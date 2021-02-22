@@ -7,5 +7,6 @@ namespace FriendsTraveling.DataLayer.Builders.Abstract
         IJourneySearchQueryBuilder SetBaseJourneyInfo();
         IJourneySearchQueryBuilder GetJourneysDependsOnCurrentUser(int userId, bool isForCurrentUser);
         IJourneySearchQueryBuilder SetJourneyPrice(int? startPrice, int? endPrice);
+        IJourneySearchQueryBuilder SetJourneyRequiredAge(int? minAge, int? maxAge);
     }
 }
