@@ -3,6 +3,7 @@ using FriendsTraveling.BusinessLayer.Constants;
 using FriendsTraveling.BusinessLayer.DTOs;
 using FriendsTraveling.BusinessLayer.Exceptions;
 using FriendsTraveling.BusinessLayer.Services.Abstract;
+using FriendsTraveling.DataLayer.Models;
 using FriendsTraveling.DataLayer.Models.User;
 using FriendsTraveling.DataLayer.Repositories.Abstract;
 using Microsoft.AspNetCore.Identity;
@@ -31,6 +32,13 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
             AppUser user = await _userManager.FindByNameAsync(username);
             return await _userRepository.GetAllUserInfoById(user.Id);
         }
+
+        public async Task<IEnumerable<JourneyRequestDto>> GetUserRequestsById(int id)
+        {
+            IEnumerable<JourneyRequest> jr = await _userRepository.GetUserRequestsById(id);
+            return _mapper.Map<IEnumerable<JourneyRequestDto>>(jr);
+        }
+
         public async Task<AppUser> GetAllUserInfoById(int id)
         {
             return await _userRepository.GetAllUserInfoById(id);

@@ -2,7 +2,6 @@
 using FriendsTraveling.DataLayer.DbContext;
 using FriendsTraveling.DataLayer.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Linq;
 
 namespace FriendsTraveling.DataLayer.Builders.Concrete
@@ -27,13 +26,17 @@ namespace FriendsTraveling.DataLayer.Builders.Concrete
              .Include(j => j.UserJourneys)
              .ThenInclude(uj => uj.AppUser)
              .ThenInclude(u => u.ProfileImage)
+             .Include(j => j.UserJourneys)
+             .ThenInclude(uj => uj.AppUser)
+             .ThenInclude(uj => uj.JourneyRequests)
              .Include(j => j.Route.Transport)
              .Include(j => j.Route.RouteLocations)
              .ThenInclude(j => j.Location);
             return this;
         }
 
-        public IJourneySearchQueryBuilder GetJourneysDependsOnCurrentUser(int userId, bool isForCurrentUser)
+        public IJourneySearchQueryBuilder GetJourneysDependsOnCurrentUser
+            (int userId, bool isForCurrentUser)
         {
             if (isForCurrentUser)
             {

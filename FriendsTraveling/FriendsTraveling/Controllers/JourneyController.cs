@@ -22,11 +22,11 @@ namespace FriendsTraveling.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetJourneys([FromQuery] SearchJourneyDto searchJourneyDto)
+        public async Task<IActionResult> GetJourneys([FromQuery] SearchJourneyDto searchJourneyDto)
         {
             int userId = Convert.ToInt32(User.FindFirstValue(AuthorizationConstants.ID));
             searchJourneyDto.UserId = userId;
-            IEnumerable<JourneyDto> journey = _journeyService.SearchJourney(searchJourneyDto);
+            IEnumerable<JourneyDto> journey = await _journeyService.SearchJourney(searchJourneyDto);
             return Ok(journey);
         }
 

@@ -1,4 +1,5 @@
 ﻿using FriendsTraveling.DataLayer.Models;
+using System.Collections.Generic;
 
 namespace FriendsTraveling.DataLayer.Builders.Abstract
 {

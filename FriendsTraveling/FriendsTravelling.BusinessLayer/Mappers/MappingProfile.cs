@@ -34,6 +34,8 @@ namespace FriendsTraveling.BusinessLayer.Mappers
             CreateMap<Journey, JourneyDto>().ReverseMap();
             CreateMap<UserJourney, UserJourneyDto>().ReverseMap();
             CreateMap<Image, ImageDto>().ReverseMap();
+            CreateMap<JourneyRequest, AddJourneyRequestDto>().ReverseMap();
+            CreateMap<JourneyRequest, JourneyRequestDto>().ReverseMap();
         }
     }
 }

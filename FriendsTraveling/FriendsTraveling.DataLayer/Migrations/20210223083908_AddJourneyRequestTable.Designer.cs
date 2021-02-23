@@ -4,20 +4,22 @@ using FriendsTraveling.DataLayer.DbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FriendsTraveling.DataLayer.Migrations
 {
     [DbContext(typeof(TravelingDbContext))]
-    partial class TravelingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210223083908_AddJourneyRequestTable")]
+    partial class AddJourneyRequestTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.3");
+                .HasAnnotation("ProductVersion", "5.0.2");
 
             modelBuilder.Entity("FriendsTraveling.DataLayer.Models.Image", b =>
                 {
@@ -92,10 +94,7 @@ namespace FriendsTraveling.DataLayer.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<int>("JourneyRequestStatus")
-                        .HasColumnType("int");
-
-                    b.Property<int>("OrganizerId")
+                    b.Property<int>("AppUserId")
                         .HasColumnType("int");
 
                     b.Property<int>("RequestUserId")
@@ -106,9 +105,7 @@ namespace FriendsTraveling.DataLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OrganizerId");
-
-                    b.HasIndex("RequestUserId");
+                    b.HasIndex("AppUserId");
 
                     b.ToTable("JourneyRequests");
                 });
@@ -457,19 +454,11 @@ namespace FriendsTraveling.DataLayer.Migrations
                 {
                     b.HasOne("FriendsTraveling.DataLayer.Models.User.AppUser", "Organizer")
                         .WithMany("JourneyRequests")
-                        .HasForeignKey("OrganizerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FriendsTraveling.DataLayer.Models.User.AppUser", "RequestUser")
-                        .WithMany()
-                        .HasForeignKey("RequestUserId")
+                        .HasForeignKey("AppUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Organizer");
-
-                    b.Navigation("RequestUser");
                 });
 
             modelBuilder.Entity("FriendsTraveling.DataLayer.Models.Route", b =>

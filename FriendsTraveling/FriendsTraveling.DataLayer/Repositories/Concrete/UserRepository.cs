@@ -1,7 +1,10 @@
 ﻿using FriendsTraveling.DataLayer.DbContext;
+using FriendsTraveling.DataLayer.Models;
 using FriendsTraveling.DataLayer.Models.User;
 using FriendsTraveling.DataLayer.Repositories.Abstract;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FriendsTraveling.DataLayer.Repositories.Concrete
@@ -26,6 +29,12 @@ namespace FriendsTraveling.DataLayer.Repositories.Concrete
         {
             return await Context.AppUsers.Include(u => u.ProfileImage).
                 FirstOrDefaultAsync(u => u.Id == id);
+        }
+
+        public async Task<IEnumerable<JourneyRequest>> GetUserRequestsById(int id)
+        {
+            return await Context.JourneyRequests
+                .Where(jr => jr.RequestUserId == id).ToListAsync();
         }
     }
 }

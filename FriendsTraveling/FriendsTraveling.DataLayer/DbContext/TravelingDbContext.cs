@@ -19,12 +19,16 @@ namespace FriendsTraveling.DataLayer.DbContext
         public DbSet<Location> Locations { get; set; }
         public DbSet<RouteLocation> RouteLocations { get; set; }
         public DbSet<Image> Images { get; set; }
+        public DbSet<JourneyRequest> JourneyRequests { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.Entity<JourneyRequest>().HasOne(m => m.Organizer)
+                                 .WithMany(m => m.JourneyRequests).HasForeignKey(m => m.OrganizerId);
+            builder.Entity<JourneyRequest>().HasOne(m => m.RequestUser)
+                                        .WithMany().HasForeignKey(m => m.RequestUserId);
             base.OnModelCreating(builder);
-
         }
     }
 }

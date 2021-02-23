@@ -3,9 +3,7 @@ using FriendsTraveling.BusinessLayer.DTOs;
 using FriendsTraveling.BusinessLayer.Services.Abstract;
 using FriendsTraveling.DataLayer.Builders.Abstract;
 using FriendsTraveling.DataLayer.Models;
-using FriendsTraveling.DataLayer.Models.User;
 using FriendsTraveling.DataLayer.Repositories.Abstract;
-using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,22 +17,18 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
         private readonly ILocationRepository _locationRepository;
         private readonly IMapper _mapper;
         private readonly IJourneySearchQueryBuilder _query;
-        private readonly UserManager<AppUser> _userManager;
 
         public JourneyService(IJourneyRepository journeyRepository,
             IMapper mapper,
-            UserManager<AppUser> userManager,
             ITransportRepository transportRepository,
             ILocationRepository locationRepository,
             IJourneySearchQueryBuilder query)
         {
             _journeyRepository = journeyRepository;
             _mapper = mapper;
-            _userManager = userManager;
             _transportRepository = transportRepository;
             _locationRepository = locationRepository;
             _query = query;
-
         }
 
         public async Task<JourneyDto> AddJourney(JourneyDto journeyDTO)
@@ -77,7 +71,7 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
             return _mapper.Map<JourneyDto>(journey);
         }
 
-        public IEnumerable<JourneyDto> SearchJourney(SearchJourneyDto parameters)
+        public async Task<IEnumerable<JourneyDto>> SearchJourney(SearchJourneyDto parameters)
         {
             List<Journey> journeys =
                 _query.SetBaseJourneyInfo()
@@ -86,8 +80,16 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
                 .SetJourneyRequiredAge(parameters.MinAge, parameters.MaxAge)
                 .Build()
                 .ToList();
-            return _mapper.Map<IEnumerable<JourneyDto>>(journeys);
-
+            List<Journey> journeysWithoutPendingUserRequests =
+                journeys.Where(j => 
+                !j.UserJourneys[0].AppUser.JourneyRequests
+                .Exists(jr => jr.OrganizerId == j.OrganizerId
+                && jr.RequestedJourneyId == j.Id
+                && jr.RequestUserId == parameters.UserId))
+                //&& j.UserJourneys[0].AppUser.JourneyRequests
+                //.Count(jr => jr.RequestedJourneyId == j.Id) < j.AvailablePlaces)
+                .ToList();
+            return _mapper.Map<IEnumerable<JourneyDto>>(journeysWithoutPendingUserRequests);
         }
 
         private async Task DeleteRemovedJourneys(JourneyDto journeyDTO)

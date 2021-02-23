@@ -28,6 +28,7 @@ namespace FriendsTraveling.Web.Installers
             services.AddTransient<IUserJourneyService, UserJourneyService>();
             services.AddTransient<IImageService, ImageService>();
             services.AddTransient<IAddJourneyService, AddJourneyService>();
+            services.AddTransient<IJourneyRequestService, JourneyRequestService>();
 
             //builders
             services.AddTransient<IJourneySearchQueryBuilder, JourneySearchQueryBuilder>();
@@ -42,6 +43,7 @@ namespace FriendsTraveling.Web.Installers
             services.AddTransient<IUserJourneyRepository, UserJourneyRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IImageRepository, ImageRepository>();
+            services.AddTransient<IJourneyRequestRepository, JourneyRequestRepository>();
         }
     }
 }
