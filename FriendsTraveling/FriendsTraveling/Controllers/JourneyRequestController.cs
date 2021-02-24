@@ -15,6 +15,13 @@ namespace FriendsTraveling.Web.Controllers
             _journeyRequestService = journeyRequestService;
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetRequestByJourneyId(int id)
+        {
+            JourneyRequestDto jr = await _journeyRequestService.GetRequestByJourneyId(id);
+            return Ok(jr);
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddJourneyRequest([FromBody] AddJourneyRequestDto addJourneyRequestDto)
         {

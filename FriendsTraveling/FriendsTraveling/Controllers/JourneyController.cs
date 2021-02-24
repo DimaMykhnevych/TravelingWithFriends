@@ -51,7 +51,7 @@ namespace FriendsTraveling.Web.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateJourney(int id, JourneyDto journeyDTO)
         {
-            JourneyDto journeyToUpdate = await _journeyService.UpdateJourney(id, journeyDTO, User.Identity.Name);
+            JourneyDto journeyToUpdate = await _journeyService.UpdateJourney(id, journeyDTO);
             if (journeyToUpdate == null)
             {
                 return NotFound();

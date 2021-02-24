@@ -9,7 +9,7 @@ namespace FriendsTraveling.BusinessLayer.Services.Abstract
         Task<IEnumerable<JourneyDto>> SearchJourney(SearchJourneyDto parameters);
         Task<JourneyDto> GetJourneyById(int id);
         Task<JourneyDto> AddJourney(JourneyDto journeyDTO);
-        Task<JourneyDto> UpdateJourney(int id, JourneyDto journeyDTO, string username);
+        Task<JourneyDto> UpdateJourney(int id, JourneyDto journeyDTO);
         Task<bool> DeleteJourney(int id);
     }
 }

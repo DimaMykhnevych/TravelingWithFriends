@@ -45,12 +45,19 @@ namespace FriendsTraveling.DataLayer.Repositories.Concrete
         {
             return Context.Journeys
               .Include(j => j.Route)
+              .AsNoTracking()
               .Include(j => j.UserJourneys)
               .ThenInclude(uj => uj.AppUser)
               .ThenInclude(u => u.ProfileImage)
+              .AsNoTracking()
+              .Include(j => j.UserJourneys)
+              .ThenInclude(uj => uj.AppUser)
+              .ThenInclude(uj => uj.JourneyRequests)
+              .AsNoTracking()
               .Include(j => j.Route.Transport)
               .Include(j => j.Route.RouteLocations)
-              .ThenInclude(j => j.Location);
+              .ThenInclude(j => j.Location)
+              .AsNoTracking();
         }
     }
 }

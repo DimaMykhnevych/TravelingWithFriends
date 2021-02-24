@@ -63,7 +63,7 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
             return _mapper.Map<JourneyDto>(journey);
         }
 
-        public async Task<JourneyDto> UpdateJourney(int id, JourneyDto journeyDTO, string currentUserName)
+        public async Task<JourneyDto> UpdateJourney(int id, JourneyDto journeyDTO)
         {
             Journey journey = _mapper.Map<Journey>(journeyDTO);
             await _journeyRepository.UpdateJourney(journey);
@@ -80,16 +80,22 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
                 .SetJourneyRequiredAge(parameters.MinAge, parameters.MaxAge)
                 .Build()
                 .ToList();
-            List<Journey> journeysWithoutPendingUserRequests =
-                journeys.Where(j => 
+                
+            return _mapper.Map<IEnumerable<JourneyDto>>(GetAvailableJourneys(journeys, parameters));
+        }
+
+        private List<Journey> GetAvailableJourneys(List<Journey> journeys, SearchJourneyDto parameters)
+        {
+            var res = journeys.Where(j =>
                 !j.UserJourneys[0].AppUser.JourneyRequests
                 .Exists(jr => jr.OrganizerId == j.OrganizerId
                 && jr.RequestedJourneyId == j.Id
-                && jr.RequestUserId == parameters.UserId))
-                //&& j.UserJourneys[0].AppUser.JourneyRequests
-                //.Count(jr => jr.RequestedJourneyId == j.Id) < j.AvailablePlaces)
-                .ToList();
-            return _mapper.Map<IEnumerable<JourneyDto>>(journeysWithoutPendingUserRequests);
+                && jr.RequestUserId == parameters.UserId));
+            if (parameters.IsForCurrentUser)
+            {
+                return res.ToList();
+            }
+            return res.Where(j => j.AvailablePlaces > 0).ToList();
         }
 
         private async Task DeleteRemovedJourneys(JourneyDto journeyDTO)
@@ -103,6 +109,7 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
                 {
                     if (!journeyDTO.Route.RouteLocations.Exists(r => r.LocationId == rl.LocationId))
                     {
+                        rl.Location.RouteLocations = null;
                         await _locationRepository.Delete(rl.Location);
                     }
                 }

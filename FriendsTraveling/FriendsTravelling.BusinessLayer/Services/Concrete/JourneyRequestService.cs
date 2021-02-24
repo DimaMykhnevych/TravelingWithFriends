@@ -11,17 +11,35 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
     {
         private readonly IJourneyRequestRepository _journeyRequestRepository;
         private readonly IMapper _mapper;
-        public JourneyRequestService(IJourneyRequestRepository journeyRequestRepository, IMapper mapper)
+        private readonly IJourneyService _journeyService;
+        public JourneyRequestService(IJourneyRequestRepository journeyRequestRepository,
+            IMapper mapper, IJourneyService journeyService)
         {
             _journeyRequestRepository = journeyRequestRepository;
             _mapper = mapper;
+            _journeyService = journeyService;
         }
         public async Task<AddJourneyRequestDto> AddJourneyRequest(AddJourneyRequestDto addJourneyRequestDto)
         {
             JourneyRequest jr = _mapper.Map<JourneyRequest>(addJourneyRequestDto);
             await _journeyRequestRepository.Insert(jr);
             await _journeyRequestRepository.Save();
+            await DecreaseRequestedJourneyAvailablePlaces(addJourneyRequestDto.RequestedJourneyId);
             return _mapper.Map<AddJourneyRequestDto>(jr);
+        }
+
+        public async Task<JourneyRequestDto> GetRequestByJourneyId(int journeyId)
+        {
+            JourneyRequest jr = await _journeyRequestRepository.GetRequestByJourneyId(journeyId);
+            return _mapper.Map<JourneyRequestDto>(jr);
+        }
+
+        private async Task DecreaseRequestedJourneyAvailablePlaces(int journeyId)
+        {
+            JourneyDto requestedJourney = await _journeyService.GetJourneyById(journeyId);
+            requestedJourney.UserJourneys = null;
+            requestedJourney.AvailablePlaces--;
+            await _journeyService.UpdateJourney(journeyId, requestedJourney);
         }
     }
 }
