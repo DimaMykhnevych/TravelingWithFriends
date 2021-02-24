@@ -17,18 +17,21 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
         private readonly ILocationRepository _locationRepository;
         private readonly IMapper _mapper;
         private readonly IJourneySearchQueryBuilder _query;
+        private readonly IJourneyRequestRepository _journeyRequestRepository;
 
         public JourneyService(IJourneyRepository journeyRepository,
             IMapper mapper,
             ITransportRepository transportRepository,
             ILocationRepository locationRepository,
-            IJourneySearchQueryBuilder query)
+            IJourneySearchQueryBuilder query,
+            IJourneyRequestRepository journeyRequestRepository)
         {
             _journeyRepository = journeyRepository;
             _mapper = mapper;
             _transportRepository = transportRepository;
             _locationRepository = locationRepository;
             _query = query;
+            _journeyRequestRepository = journeyRequestRepository;
         }
 
         public async Task<JourneyDto> AddJourney(JourneyDto journeyDTO)
@@ -51,6 +54,7 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
             {
                 await _locationRepository.Delete(location.Location);
             }
+            await DeleteRequestsByJourneyId(id);
             await _journeyRepository.Save();
             await _locationRepository.Save();
             await _transportRepository.Save();
@@ -82,6 +86,19 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
                 .ToList();
                 
             return _mapper.Map<IEnumerable<JourneyDto>>(GetAvailableJourneys(journeys, parameters));
+        }
+
+        private async Task DeleteRequestsByJourneyId(int journeyId)
+        {
+            IEnumerable<JourneyRequest> requests = await _journeyRequestRepository.GetAll();
+            foreach (var request in requests)
+            {
+                if (request.RequestedJourneyId == journeyId)
+                {
+                    await _journeyRequestRepository.Delete(request);
+                }
+            }
+            await _journeyRequestRepository.Save();
         }
 
         private List<Journey> GetAvailableJourneys(List<Journey> journeys, SearchJourneyDto parameters)

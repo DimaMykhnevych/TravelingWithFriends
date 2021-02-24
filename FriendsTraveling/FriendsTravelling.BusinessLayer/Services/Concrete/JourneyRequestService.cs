@@ -3,6 +3,7 @@ using FriendsTraveling.BusinessLayer.DTOs;
 using FriendsTraveling.BusinessLayer.Services.Abstract;
 using FriendsTraveling.DataLayer.Models;
 using FriendsTraveling.DataLayer.Repositories.Abstract;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace FriendsTraveling.BusinessLayer.Services.Concrete
@@ -26,6 +27,19 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
             await _journeyRequestRepository.Save();
             await DecreaseRequestedJourneyAvailablePlaces(addJourneyRequestDto.RequestedJourneyId);
             return _mapper.Map<AddJourneyRequestDto>(jr);
+        }
+
+        public async Task DeleteRequestsByJourneyId(int journeyId)
+        {
+            IEnumerable<JourneyRequest> requests = await _journeyRequestRepository.GetAll();
+            foreach(var request in requests)
+            {
+                if(request.RequestedJourneyId == journeyId)
+                {
+                    await _journeyRequestRepository.Delete(request);
+                }
+            }
+            await _journeyRequestRepository.Save();
         }
 
         public async Task<JourneyRequestDto> GetRequestByJourneyId(int journeyId)
