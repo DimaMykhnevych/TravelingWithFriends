@@ -2,6 +2,8 @@
 using FriendsTraveling.DataLayer.Models;
 using FriendsTraveling.DataLayer.Repositories.Abstract;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FriendsTraveling.DataLayer.Repositories.Concrete
@@ -14,6 +16,15 @@ namespace FriendsTraveling.DataLayer.Repositories.Concrete
         {
             return await Context.JourneyRequests
                 .FirstOrDefaultAsync(jr => jr.RequestedJourneyId == journeyId);
+        }
+
+        public async Task<IEnumerable<JourneyRequest>> GetUserRequests(int requestedUserId)
+        {
+            return await Context.JourneyRequests
+                .Where(r => r.RequestUserId == requestedUserId)
+                .Include(r => r.Organizer)
+                .Include(r => r.RequestUser)
+                .ToListAsync();
         }
     }
 }

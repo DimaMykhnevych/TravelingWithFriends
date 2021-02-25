@@ -1,6 +1,7 @@
 ﻿using FriendsTraveling.BusinessLayer.DTOs;
 using FriendsTraveling.BusinessLayer.Services.Abstract;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace FriendsTraveling.Web.Controllers
@@ -13,6 +14,13 @@ namespace FriendsTraveling.Web.Controllers
         public JourneyRequestController(IJourneyRequestService journeyRequestService)
         {
             _journeyRequestService = journeyRequestService;
+        }
+
+        [HttpGet("requestsWithJourneys/{requestedUserId}")]
+        public async Task<IActionResult> GetUserRequestsWithJourneys(int requestedUserId) {
+            IEnumerable<ReviewJourneyRequestDto> reviewJourneyRequests =
+               await  _journeyRequestService.GetUserRequestsWithJourneys(requestedUserId);
+            return Ok(reviewJourneyRequests);
         }
 
         [HttpGet("{id}")]

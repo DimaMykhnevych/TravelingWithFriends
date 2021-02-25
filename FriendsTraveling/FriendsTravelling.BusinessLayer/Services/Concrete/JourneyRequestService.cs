@@ -48,6 +48,20 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
             return _mapper.Map<JourneyRequestDto>(jr);
         }
 
+        public async Task<IEnumerable<ReviewJourneyRequestDto>> GetUserRequestsWithJourneys(int requestedUserId)
+        {
+            IEnumerable<JourneyRequest> userRequests =
+                await _journeyRequestRepository.GetUserRequests(requestedUserId);
+            IEnumerable<ReviewJourneyRequestDto> reviewJourneyRequests = 
+                _mapper.Map<IEnumerable<ReviewJourneyRequestDto>>(userRequests);
+            foreach(var jr in reviewJourneyRequests)
+            {
+                jr.Journey = await _journeyService.GetJourneyById(jr.RequestedJourneyId);
+                jr.Journey.UserJourneys = null;
+            }
+            return reviewJourneyRequests;
+        }
+
         private async Task DecreaseRequestedJourneyAvailablePlaces(int journeyId)
         {
             JourneyDto requestedJourney = await _journeyService.GetJourneyById(journeyId);
