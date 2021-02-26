@@ -9,6 +9,6 @@ namespace FriendsTraveling.BusinessLayer.Services.Abstract
         Task<AddJourneyRequestDto> AddJourneyRequest(AddJourneyRequestDto addJourneyRequestDto);
         Task<JourneyRequestDto> GetRequestByJourneyId(int journeyId);
         Task<IEnumerable<ReviewJourneyRequestDto>> GetUserRequestsWithJourneys(int requestedUserId);
-        Task DeleteRequestsByJourneyId(int journeyId);
+        Task<bool> DeleteRequestById(int id);
     }
 }

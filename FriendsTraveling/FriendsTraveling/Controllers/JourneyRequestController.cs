@@ -39,5 +39,12 @@ namespace FriendsTraveling.Web.Controllers
                 return BadRequest();
             return Ok(added);
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteRequest(int id)
+        {
+            bool deleted = await _journeyRequestService.DeleteRequestById(id);
+            return Ok(deleted);
+        }
     }
 }

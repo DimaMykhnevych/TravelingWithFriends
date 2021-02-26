@@ -25,21 +25,19 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
             JourneyRequest jr = _mapper.Map<JourneyRequest>(addJourneyRequestDto);
             await _journeyRequestRepository.Insert(jr);
             await _journeyRequestRepository.Save();
-            await DecreaseRequestedJourneyAvailablePlaces(addJourneyRequestDto.RequestedJourneyId);
+            await DecreaseOrIncreaseRequestedJourneyAvailablePlaces(
+                addJourneyRequestDto.RequestedJourneyId, true);
             return _mapper.Map<AddJourneyRequestDto>(jr);
         }
 
-        public async Task DeleteRequestsByJourneyId(int journeyId)
+        public async Task<bool> DeleteRequestById(int id)
         {
-            IEnumerable<JourneyRequest> requests = await _journeyRequestRepository.GetAll();
-            foreach(var request in requests)
-            {
-                if(request.RequestedJourneyId == journeyId)
-                {
-                    await _journeyRequestRepository.Delete(request);
-                }
-            }
+            JourneyRequest journeyRequestToDelete = await _journeyRequestRepository.Get(id);
+            if (journeyRequestToDelete == null) return false;
+            await DecreaseOrIncreaseRequestedJourneyAvailablePlaces(journeyRequestToDelete.RequestedJourneyId);
+            await _journeyRequestRepository.Delete(journeyRequestToDelete);
             await _journeyRequestRepository.Save();
+            return true;
         }
 
         public async Task<JourneyRequestDto> GetRequestByJourneyId(int journeyId)
@@ -62,11 +60,20 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
             return reviewJourneyRequests;
         }
 
-        private async Task DecreaseRequestedJourneyAvailablePlaces(int journeyId)
+
+        private async Task DecreaseOrIncreaseRequestedJourneyAvailablePlaces(int journeyId, 
+            bool decrease = false)
         {
             JourneyDto requestedJourney = await _journeyService.GetJourneyById(journeyId);
             requestedJourney.UserJourneys = null;
-            requestedJourney.AvailablePlaces--;
+            if (decrease)
+            {
+                requestedJourney.AvailablePlaces--;
+            }
+            else
+            {
+                requestedJourney.AvailablePlaces++;
+            }
             await _journeyService.UpdateJourney(journeyId, requestedJourney);
         }
     }
