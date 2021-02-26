@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FriendsTraveling.BusinessLayer.DTOs;
 using FriendsTraveling.BusinessLayer.Services.Abstract;
+using FriendsTraveling.DataLayer.Enums;
 using FriendsTraveling.DataLayer.Models;
 using FriendsTraveling.DataLayer.Repositories.Abstract;
 using System.Collections.Generic;
@@ -34,7 +35,11 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
         {
             JourneyRequest journeyRequestToDelete = await _journeyRequestRepository.Get(id);
             if (journeyRequestToDelete == null) return false;
-            await DecreaseOrIncreaseRequestedJourneyAvailablePlaces(journeyRequestToDelete.RequestedJourneyId);
+            if (journeyRequestToDelete.JourneyRequestStatus != JourneyRequestStatus.canceled)
+            {
+                await DecreaseOrIncreaseRequestedJourneyAvailablePlaces
+                    (journeyRequestToDelete.RequestedJourneyId);
+            }
             await _journeyRequestRepository.Delete(journeyRequestToDelete);
             await _journeyRequestRepository.Save();
             return true;
@@ -46,13 +51,55 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
             return _mapper.Map<JourneyRequestDto>(jr);
         }
 
-        public async Task<IEnumerable<ReviewJourneyRequestDto>> GetUserRequestsWithJourneys(int requestedUserId)
+        public async Task<IEnumerable<ReviewJourneyRequestDto>> GetUserInboxRequests(int userId)
+        {
+            IEnumerable<JourneyRequest> userInbocRequests =
+                await _journeyRequestRepository.GetUserInboxRequests(userId);
+            return await IncludeJourneysToRequests(userInbocRequests);
+        }
+
+        public async Task<IEnumerable<ReviewJourneyRequestDto>> GetUserRequestsWithJourneys(
+            int requestedUserId)
         {
             IEnumerable<JourneyRequest> userRequests =
                 await _journeyRequestRepository.GetUserRequests(requestedUserId);
-            IEnumerable<ReviewJourneyRequestDto> reviewJourneyRequests = 
-                _mapper.Map<IEnumerable<ReviewJourneyRequestDto>>(userRequests);
-            foreach(var jr in reviewJourneyRequests)
+
+            return await IncludeJourneysToRequests(userRequests);
+        }
+        public async Task<JourneyRequestDto> UpdateJourneyRequestStatus(
+            ChangeRequestStatusDto changeRequestStatusDto)
+        {
+            JourneyRequest journeyRequestToUpdate =
+                await _journeyRequestRepository.Get(changeRequestStatusDto.RequestId);
+            if (journeyRequestToUpdate.JourneyRequestStatus != JourneyRequestStatus.pending
+               && changeRequestStatusDto.NewStatus == JourneyRequestStatus.pending)
+            {
+                return null;
+            }
+            journeyRequestToUpdate.JourneyRequestStatus = changeRequestStatusDto.NewStatus;
+            await OnRequestStatusChanged(journeyRequestToUpdate.RequestedJourneyId,
+                changeRequestStatusDto.NewStatus);
+            await _journeyRequestRepository.Update(journeyRequestToUpdate);
+            await _journeyRequestRepository.Save();
+            return _mapper.Map<JourneyRequestDto>(journeyRequestToUpdate);
+        }
+
+        private async Task OnRequestStatusChanged(int journeyId, JourneyRequestStatus status)
+        {
+            switch (status)
+            {
+                case JourneyRequestStatus.canceled:
+                    await DecreaseOrIncreaseRequestedJourneyAvailablePlaces(journeyId);
+                    break;
+            }
+        }
+
+        private async Task<IEnumerable<ReviewJourneyRequestDto>> IncludeJourneysToRequests(
+            IEnumerable<JourneyRequest> userRequests)
+        {
+            IEnumerable<ReviewJourneyRequestDto> reviewJourneyRequests =
+               _mapper.Map<IEnumerable<ReviewJourneyRequestDto>>(userRequests);
+            foreach (var jr in reviewJourneyRequests)
             {
                 jr.Journey = await _journeyService.GetJourneyById(jr.RequestedJourneyId);
                 jr.Journey.UserJourneys = null;
@@ -60,8 +107,7 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
             return reviewJourneyRequests;
         }
 
-
-        private async Task DecreaseOrIncreaseRequestedJourneyAvailablePlaces(int journeyId, 
+        private async Task DecreaseOrIncreaseRequestedJourneyAvailablePlaces(int journeyId,
             bool decrease = false)
         {
             JourneyDto requestedJourney = await _journeyService.GetJourneyById(journeyId);
@@ -76,5 +122,7 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
             }
             await _journeyService.UpdateJourney(journeyId, requestedJourney);
         }
+
+
     }
 }

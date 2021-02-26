@@ -23,6 +23,14 @@ namespace FriendsTraveling.Web.Controllers
             return Ok(reviewJourneyRequests);
         }
 
+        [HttpGet("userInboxRequests/{userId}")]
+        public async Task<IActionResult> GetUserInboxRequests(int userId)
+        {
+            IEnumerable<ReviewJourneyRequestDto> reviewJourneyInboxRequests =
+               await _journeyRequestService.GetUserInboxRequests(userId);
+            return Ok(reviewJourneyInboxRequests);
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetRequestByJourneyId(int id)
         {
@@ -38,6 +46,17 @@ namespace FriendsTraveling.Web.Controllers
             if (added == null)
                 return BadRequest();
             return Ok(added);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> ChangeJourneyRequestStatus(
+            [FromBody] ChangeRequestStatusDto changeRequestStatusDto)
+        {
+            JourneyRequestDto updatedJourneyRequest = 
+                await _journeyRequestService.UpdateJourneyRequestStatus(changeRequestStatusDto);
+            if (updatedJourneyRequest == null)
+                return BadRequest();
+            return Ok(updatedJourneyRequest);
         }
 
         [HttpDelete("{id}")]

@@ -18,6 +18,15 @@ namespace FriendsTraveling.DataLayer.Repositories.Concrete
                 .FirstOrDefaultAsync(jr => jr.RequestedJourneyId == journeyId);
         }
 
+        public async Task<IEnumerable<JourneyRequest>> GetUserInboxRequests(int userId)
+        {
+            return await Context.JourneyRequests
+               .Where(r => r.OrganizerId == userId)
+               .Include(r => r.Organizer)
+               .Include(r => r.RequestUser)
+               .ToListAsync();
+        }
+
         public async Task<IEnumerable<JourneyRequest>> GetUserRequests(int requestedUserId)
         {
             return await Context.JourneyRequests

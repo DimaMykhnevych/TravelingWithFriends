@@ -15,6 +15,6 @@ namespace FriendsTraveling.BusinessLayer.DTOs
         public int RequestUserId { get; set; }
         public JourneyDto Journey { get; set; }
         public AppUser Organizer { get; set; }
-
+        public AppUser RequestUser { get; set; }
     }
 }

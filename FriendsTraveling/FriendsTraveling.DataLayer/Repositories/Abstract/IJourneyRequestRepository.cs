@@ -8,5 +8,6 @@ namespace FriendsTraveling.DataLayer.Repositories.Abstract
     {
         Task<JourneyRequest> GetRequestByJourneyId(int journeyId);
         Task<IEnumerable<JourneyRequest>> GetUserRequests(int requestedUserId);
+        Task<IEnumerable<JourneyRequest>> GetUserInboxRequests(int userId);
     }
 }
