@@ -1,3 +1,4 @@
+using FriendsTraveling.BusinessLayer.HubN;
 using FriendsTraveling.Web.Extensions;
 using FriendsTraveling.Web.Options;
 using Microsoft.AspNetCore.Builder;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
+using System;
 using System.IO;
 
 namespace FriendsTraveling
@@ -27,6 +29,16 @@ namespace FriendsTraveling
             services.AddMvc().AddNewtonsoftJson(o =>
             {
                 o.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            });
+            services.AddSignalR();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", builder =>
+                builder.WithOrigins("http://localhost:4200")
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials()
+                );
             });
         }
 
@@ -50,9 +62,7 @@ namespace FriendsTraveling
 
             app.UseRouting();
 
-            app.UseCors(builder => builder.AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader());
+            app.UseCors("CorsPolicy");
 
             app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions()
@@ -65,9 +75,15 @@ namespace FriendsTraveling
 
             app.UseAuthorization();
 
+            app.UseWebSockets(new WebSocketOptions
+            {
+                KeepAliveInterval = TimeSpan.FromSeconds(120),
+            });
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<JourneyRequestHub>("/hubs/journeyRequest");
             });
         }
     }

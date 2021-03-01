@@ -1,6 +1,8 @@
 ﻿using FriendsTraveling.BusinessLayer.DTOs;
+using FriendsTraveling.BusinessLayer.HubN;
 using FriendsTraveling.BusinessLayer.Services.Abstract;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -11,9 +13,13 @@ namespace FriendsTraveling.Web.Controllers
     public class JourneyRequestController : ControllerBase
     {
         private readonly IJourneyRequestService _journeyRequestService;
-        public JourneyRequestController(IJourneyRequestService journeyRequestService)
+        private readonly IHubContext<JourneyRequestHub> _hub;
+        public JourneyRequestController(
+            IJourneyRequestService journeyRequestService,
+            IHubContext<JourneyRequestHub> hub)
         {
             _journeyRequestService = journeyRequestService;
+            _hub = hub;
         }
 
         [HttpGet("requestsWithJourneys/{requestedUserId}")]
@@ -45,6 +51,7 @@ namespace FriendsTraveling.Web.Controllers
                 await _journeyRequestService.AddJourneyRequest(addJourneyRequestDto);
             if (added == null)
                 return BadRequest();
+            await _hub.Clients.All.SendAsync("requestsChanged", "request added");
             return Ok(added);
         }
 
@@ -56,6 +63,7 @@ namespace FriendsTraveling.Web.Controllers
                 await _journeyRequestService.UpdateJourneyRequestStatus(changeRequestStatusDto);
             if (updatedJourneyRequest == null)
                 return BadRequest();
+            await _hub.Clients.All.SendAsync("requestsChanged", "request staus changed");
             return Ok(updatedJourneyRequest);
         }
 
@@ -63,6 +71,8 @@ namespace FriendsTraveling.Web.Controllers
         public async Task<IActionResult> DeleteRequest(int id)
         {
             bool deleted = await _journeyRequestService.DeleteRequestById(id);
+            await _hub.Clients.All.SendAsync("requestsChanged", "request deleted");
+
             return Ok(deleted);
         }
     }
