@@ -2,6 +2,7 @@
 using FriendsTraveling.DataLayer.Models.Auth;
 using FriendsTraveling.DataLayer.Models.User;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -13,9 +14,14 @@ namespace FriendsTraveling.Web.Controllers
     {
 
         private readonly BaseAuthorizationService _authorizationService;
-        public AuthController(BaseAuthorizationService authorizationService)
+        private readonly IEmailService _emailService;
+        private readonly UserManager<AppUser> _userManager;
+        public AuthController(BaseAuthorizationService authorizationService, 
+            IEmailService emailService, UserManager<AppUser> userManager)
         {
             _authorizationService = authorizationService;
+            _emailService = emailService;
+            _userManager = userManager;
         }
 
         [HttpPost]
@@ -24,6 +30,8 @@ namespace FriendsTraveling.Web.Controllers
         public async Task<IActionResult> Login([FromBody] AuthSignInModel model)
         {
             JWTTokenStatusResult result = await _authorizationService.GenerateTokenAsync(model);
+            //AppUser user = await _userManager.FindByNameAsync(model.UserName);
+            //await _emailService.SendTicketEmail(user);
 
             return Ok(result);
         }

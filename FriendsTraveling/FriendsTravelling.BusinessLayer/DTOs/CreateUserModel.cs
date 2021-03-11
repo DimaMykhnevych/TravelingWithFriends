@@ -25,5 +25,6 @@ namespace FriendsTraveling.BusinessLayer.DTOs
         [Required]
         [MinLength(6)]
         public string ConfirmPassword { get; set; }
+        public string ClientURI { get; set; }
     }
 }

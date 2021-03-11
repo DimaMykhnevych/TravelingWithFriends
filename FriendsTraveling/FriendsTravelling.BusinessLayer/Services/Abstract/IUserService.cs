@@ -14,6 +14,7 @@ namespace FriendsTraveling.BusinessLayer.Services.Abstract
         Task<AppUser> CreateUserAsync(CreateUserModel userModel);
         Task<AppUser> UpdateUserAsync(UpdateUserModel userModel);
         Task<AppUser> UpdateUserProfileAsync(UpdateUserProfileDto userProfileDTO);
+        Task<ConfirmEmailDto> ConfirmEmail(ConfirmEmailDto confirmEmailDto);
         Task DeleteUser(int userId);
     }
 }

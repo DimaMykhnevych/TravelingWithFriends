@@ -60,6 +60,16 @@ namespace FriendsTraveling.Web.Controllers
             }
         }
 
+        [HttpPost("confirmEmail")]
+        public async Task<IActionResult> ConfirmEmail([FromBody] ConfirmEmailDto confirmEmailDto)
+        {
+            ConfirmEmailDto confirmEmail = await _service.ConfirmEmail(confirmEmailDto);
+            if(confirmEmail == null)
+                return BadRequest("Invalid Email Confirmation Request");
+            return Ok(confirmEmail);
+        }
+
+
         [HttpPut]
         public async Task<IActionResult> UpdateUserProfile([FromBody] UpdateUserProfileDto userProfileDTO)
         {

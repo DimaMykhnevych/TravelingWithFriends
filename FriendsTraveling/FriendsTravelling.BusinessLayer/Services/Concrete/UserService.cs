@@ -7,6 +7,7 @@ using FriendsTraveling.DataLayer.Models;
 using FriendsTraveling.DataLayer.Models.User;
 using FriendsTraveling.DataLayer.Repositories.Abstract;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.WebUtilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,12 +20,17 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
         private readonly IMapper _mapper;
         private readonly UserManager<AppUser> _userManager;
         private readonly IUserRepository _userRepository;
+        private readonly IEmailService _emailService;
 
-        public UserService(IMapper mapper, UserManager<AppUser> userManager, IUserRepository userRepository)
+        public UserService(IMapper mapper,
+            UserManager<AppUser> userManager,
+            IUserRepository userRepository,
+            IEmailService emailService)
         {
             _mapper = mapper;
             _userManager = userManager;
             _userRepository = userRepository;
+            _emailService = emailService;
         }
 
         public async Task<AppUser> GetUserByUsername(string username)
@@ -61,8 +67,28 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
             IdentityResult addUserResult = await _userManager.CreateAsync(user, model.Password);
 
             ValidateIdentityResult(addUserResult);
+            string token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+            var param = new Dictionary<string, string>
+                {
+                    {"token", token },
+                    {"email", user.Email }
+                };
+            string url = QueryHelpers.AddQueryString(model.ClientURI, param);
+            await _emailService.SendTicketEmail(user, url);
 
             return await GetUserByUsername(user.UserName);
+        }
+
+        public async Task<ConfirmEmailDto> ConfirmEmail(ConfirmEmailDto confirmEmailDto)
+        {
+            AppUser user = await _userManager.FindByEmailAsync(confirmEmailDto.Email);
+            if (user == null)
+                return null;
+            var confirmResult = await _userManager.ConfirmEmailAsync(user, confirmEmailDto.Token);
+            if (!confirmResult.Succeeded)
+                return null;
+            return confirmEmailDto;
         }
 
         public async Task<AppUser> UpdateUserProfileAsync(UpdateUserProfileDto userProfileDTO)
@@ -172,6 +198,6 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
             return errors.Any() ? false : true;
         }
 
-      
+
     }
 }

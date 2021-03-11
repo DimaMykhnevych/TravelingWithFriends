@@ -2,6 +2,7 @@
 using FriendsTraveling.DataLayer.Models.Auth;
 using FriendsTraveling.DataLayer.Models.User;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -14,7 +15,8 @@ namespace FriendsTraveling.Web.Installers
         public void InstallServices(IServiceCollection services, IConfiguration configuration)
         {
             services.AddIdentity<AppUser, UserRole>()
-                .AddEntityFrameworkStores<TravelingDbContext>();
+                .AddEntityFrameworkStores<TravelingDbContext>()
+                .AddDefaultTokenProviders();
 
             services.AddAuthentication(options =>
             {

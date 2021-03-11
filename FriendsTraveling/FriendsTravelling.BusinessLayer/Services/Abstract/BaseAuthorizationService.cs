@@ -1,4 +1,5 @@
 ﻿using FriendsTraveling.BusinessLayer.Factories.AuthTokenFactory;
+using FriendsTraveling.DataLayer.Enums;
 using FriendsTraveling.DataLayer.Models.Auth;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -16,10 +17,15 @@ namespace FriendsTraveling.BusinessLayer.Services.Abstract
         }
         public async Task<JWTTokenStatusResult> GenerateTokenAsync(AuthSignInModel model)
         {
-            bool status = await VerifyUserAsync(model);
-            if (!status)
+            LoginErrorCodes status = await VerifyUserAsync(model);
+            if (status != LoginErrorCodes.None)
             {
-                return new JWTTokenStatusResult() { Token = null, IsAuthorized = false };
+                return new JWTTokenStatusResult()
+                {
+                    Token = null,
+                    IsAuthorized = false,
+                    LoginErrorCode = status
+                };
             }
 
             IEnumerable<Claim> claims = await GetUserClaimsAsync(model);
@@ -31,11 +37,12 @@ namespace FriendsTraveling.BusinessLayer.Services.Abstract
                 Token = new JwtSecurityTokenHandler().WriteToken(token),
                 IsAuthorized = true,
                 UserInfo = info,
+                LoginErrorCode = LoginErrorCodes.None,
             };
         }
 
         public abstract Task<IEnumerable<Claim>> GetUserClaimsAsync(AuthSignInModel model);
         public abstract Task<UserAuthInfo> GetUserInfoAsync(string userName);
-        public abstract Task<bool> VerifyUserAsync(AuthSignInModel model);
+        public abstract Task<LoginErrorCodes> VerifyUserAsync(AuthSignInModel model);
     }
 }
