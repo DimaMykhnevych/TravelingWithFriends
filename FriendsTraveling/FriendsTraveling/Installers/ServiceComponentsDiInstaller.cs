@@ -29,6 +29,7 @@ namespace FriendsTraveling.Web.Installers
             services.AddTransient<IImageService, ImageService>();
             services.AddTransient<IAddJourneyService, AddJourneyService>();
             services.AddTransient<IJourneyRequestService, JourneyRequestService>();
+            services.AddTransient<IEmailService, EmailService>();
 
             //builders
             services.AddTransient<IJourneySearchQueryBuilder, JourneySearchQueryBuilder>();
