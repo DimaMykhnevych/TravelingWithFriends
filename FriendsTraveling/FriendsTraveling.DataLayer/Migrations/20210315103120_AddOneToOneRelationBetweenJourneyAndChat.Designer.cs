@@ -4,14 +4,16 @@ using FriendsTraveling.DataLayer.DbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FriendsTraveling.DataLayer.Migrations
 {
     [DbContext(typeof(TravelingDbContext))]
-    partial class TravelingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210315103120_AddOneToOneRelationBetweenJourneyAndChat")]
+    partial class AddOneToOneRelationBetweenJourneyAndChat
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -174,9 +176,6 @@ namespace FriendsTraveling.DataLayer.Migrations
                     b.Property<int>("AppUserId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ChatId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -187,8 +186,6 @@ namespace FriendsTraveling.DataLayer.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AppUserId");
-
-                    b.HasIndex("ChatId");
 
                     b.ToTable("Messages");
                 });
@@ -567,14 +564,6 @@ namespace FriendsTraveling.DataLayer.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FriendsTraveling.DataLayer.Models.Chat", "Chat")
-                        .WithMany("Messages")
-                        .HasForeignKey("ChatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Chat");
-
                     b.Navigation("Sender");
                 });
 
@@ -699,8 +688,6 @@ namespace FriendsTraveling.DataLayer.Migrations
 
             modelBuilder.Entity("FriendsTraveling.DataLayer.Models.Chat", b =>
                 {
-                    b.Navigation("Messages");
-
                     b.Navigation("UserChats");
                 });
 

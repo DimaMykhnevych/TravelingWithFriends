@@ -4,14 +4,16 @@ using FriendsTraveling.DataLayer.DbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FriendsTraveling.DataLayer.Migrations
 {
     [DbContext(typeof(TravelingDbContext))]
-    partial class TravelingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210315101319_AddMessageTable")]
+    partial class AddMessageTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,17 +31,11 @@ namespace FriendsTraveling.DataLayer.Migrations
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("JourneyChatId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("JourneyChatId")
-                        .IsUnique();
 
                     b.ToTable("Chats");
                 });
@@ -174,9 +170,6 @@ namespace FriendsTraveling.DataLayer.Migrations
                     b.Property<int>("AppUserId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ChatId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -187,8 +180,6 @@ namespace FriendsTraveling.DataLayer.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AppUserId");
-
-                    b.HasIndex("ChatId");
 
                     b.ToTable("Messages");
                 });
@@ -507,17 +498,6 @@ namespace FriendsTraveling.DataLayer.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("FriendsTraveling.DataLayer.Models.Chat", b =>
-                {
-                    b.HasOne("FriendsTraveling.DataLayer.Models.Journey", "Journey")
-                        .WithOne("Chat")
-                        .HasForeignKey("FriendsTraveling.DataLayer.Models.Chat", "JourneyChatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Journey");
-                });
-
             modelBuilder.Entity("FriendsTraveling.DataLayer.Models.Image", b =>
                 {
                     b.HasOne("FriendsTraveling.DataLayer.Models.User.AppUser", "AppUser")
@@ -566,14 +546,6 @@ namespace FriendsTraveling.DataLayer.Migrations
                         .HasForeignKey("AppUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("FriendsTraveling.DataLayer.Models.Chat", "Chat")
-                        .WithMany("Messages")
-                        .HasForeignKey("ChatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Chat");
 
                     b.Navigation("Sender");
                 });
@@ -699,15 +671,11 @@ namespace FriendsTraveling.DataLayer.Migrations
 
             modelBuilder.Entity("FriendsTraveling.DataLayer.Models.Chat", b =>
                 {
-                    b.Navigation("Messages");
-
                     b.Navigation("UserChats");
                 });
 
             modelBuilder.Entity("FriendsTraveling.DataLayer.Models.Journey", b =>
                 {
-                    b.Navigation("Chat");
-
                     b.Navigation("UserJourneys");
                 });
 

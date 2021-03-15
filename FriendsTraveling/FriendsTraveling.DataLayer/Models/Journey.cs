@@ -35,5 +35,6 @@ namespace FriendsTraveling.DataLayer.Models
         public List<UserJourney> UserJourneys { get; set; }
         public int RouteId { get; set; }
         public Route Route { get; set; }
+        public Chat Chat { get; set; }
     }
 }

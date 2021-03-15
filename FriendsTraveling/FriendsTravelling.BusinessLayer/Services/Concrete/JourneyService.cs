@@ -4,6 +4,7 @@ using FriendsTraveling.BusinessLayer.Services.Abstract;
 using FriendsTraveling.DataLayer.Builders.Abstract;
 using FriendsTraveling.DataLayer.Models;
 using FriendsTraveling.DataLayer.Repositories.Abstract;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -37,6 +38,16 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
         public async Task<JourneyDto> AddJourney(JourneyDto journeyDTO)
         {
             Journey journey = _mapper.Map<Journey>(journeyDTO);
+            Chat chat= new Chat()
+            {
+                Name = $"{journeyDTO.Route.RouteLocations[0].Location.Name} journey chat",
+                CreationDate = DateTime.Now,
+                Id = 0,
+                JourneyChatId = journey.Id,
+            };
+            chat.UserChats = new List<UserChat>();
+            chat.UserChats.Add(new UserChat() { Chat = chat, AppUserId = journeyDTO.OrganizerId });
+            journey.Chat = chat;
             var j = await _journeyRepository.Insert(journey);
             await _journeyRepository.Save();
 
@@ -71,7 +82,7 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
         {
             Journey journey = _mapper.Map<Journey>(journeyDTO);
             await _journeyRepository.UpdateJourney(journey);
-            await DeleteRemovedJourneys(journeyDTO);
+            await DeleteRemovedLocations(journeyDTO);
             return _mapper.Map<JourneyDto>(journey);
         }
 
@@ -115,7 +126,7 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
             return res.Where(j => j.AvailablePlaces > 0).ToList();
         }
 
-        private async Task DeleteRemovedJourneys(JourneyDto journeyDTO)
+        private async Task DeleteRemovedLocations(JourneyDto journeyDTO)
         {
             Journey beforeUpdateJourney = await _journeyRepository.GetJourneyWithRoutesById(journeyDTO.Id);
             int locationsCount = beforeUpdateJourney.Route.RouteLocations.Count;

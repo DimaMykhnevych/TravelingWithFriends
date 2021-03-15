@@ -37,6 +37,10 @@ namespace FriendsTraveling.BusinessLayer.Mappers
             CreateMap<JourneyRequest, AddJourneyRequestDto>().ReverseMap();
             CreateMap<JourneyRequest, JourneyRequestDto>().ReverseMap();
             CreateMap<JourneyRequest, ReviewJourneyRequestDto>().ReverseMap();
+            CreateMap<Chat, ChatDto>().ReverseMap();
+            CreateMap<Message, MessageDto>().ReverseMap();
+            CreateMap<UserChat, UserChatDto>().ReverseMap();
+
         }
     }
 }

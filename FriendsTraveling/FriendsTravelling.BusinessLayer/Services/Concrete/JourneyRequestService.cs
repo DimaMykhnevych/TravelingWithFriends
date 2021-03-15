@@ -3,7 +3,9 @@ using FriendsTraveling.BusinessLayer.DTOs;
 using FriendsTraveling.BusinessLayer.Services.Abstract;
 using FriendsTraveling.DataLayer.Enums;
 using FriendsTraveling.DataLayer.Models;
+using FriendsTraveling.DataLayer.Models.User;
 using FriendsTraveling.DataLayer.Repositories.Abstract;
+using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -14,12 +16,17 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
         private readonly IJourneyRequestRepository _journeyRequestRepository;
         private readonly IMapper _mapper;
         private readonly IJourneyService _journeyService;
+        private readonly IChatRepository _chatRepository;
+        private readonly IUserChatRepository _userChatRepository;
         public JourneyRequestService(IJourneyRequestRepository journeyRequestRepository,
-            IMapper mapper, IJourneyService journeyService)
+            IMapper mapper, IJourneyService journeyService, IChatRepository chatRepository,
+            IUserChatRepository userChatRepository)
         {
             _journeyRequestRepository = journeyRequestRepository;
             _mapper = mapper;
             _journeyService = journeyService;
+            _chatRepository = chatRepository;
+            _userChatRepository = userChatRepository;
         }
         public async Task<AddJourneyRequestDto> AddJourneyRequest(AddJourneyRequestDto addJourneyRequestDto)
         {
@@ -28,6 +35,14 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
             await _journeyRequestRepository.Save();
             await DecreaseOrIncreaseRequestedJourneyAvailablePlaces(
                 addJourneyRequestDto.RequestedJourneyId, true);
+            Chat chat = await _chatRepository.GetChatByJourneyId(addJourneyRequestDto.RequestedJourneyId);
+            await _userChatRepository.Insert(
+                new UserChat()
+                {
+                    AppUserId = addJourneyRequestDto.RequestUserId,
+                    ChatId = chat.Id
+                });
+            await _userChatRepository.Save();
             return _mapper.Map<AddJourneyRequestDto>(jr);
         }
 
@@ -42,6 +57,7 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
             }
             await _journeyRequestRepository.Delete(journeyRequestToDelete);
             await _journeyRequestRepository.Save();
+
             return true;
         }
 

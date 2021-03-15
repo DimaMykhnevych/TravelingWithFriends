@@ -12,8 +12,9 @@ namespace FriendsTraveling.DataLayer.Models.User
         public Image ProfileImage { get; set; }
 
         public List<UserJourney> UserJourneys { get; set; }
+        public List<UserChat> UserChats { get; set; }
         public List<JourneyRequest> JourneyRequests { get; set; }
-
+        public List<Message> Messages { get; set; }
 
     }
 }
