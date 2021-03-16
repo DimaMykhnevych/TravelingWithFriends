@@ -35,14 +35,7 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
             await _journeyRequestRepository.Save();
             await DecreaseOrIncreaseRequestedJourneyAvailablePlaces(
                 addJourneyRequestDto.RequestedJourneyId, true);
-            Chat chat = await _chatRepository.GetChatByJourneyId(addJourneyRequestDto.RequestedJourneyId);
-            await _userChatRepository.Insert(
-                new UserChat()
-                {
-                    AppUserId = addJourneyRequestDto.RequestUserId,
-                    ChatId = chat.Id
-                });
-            await _userChatRepository.Save();
+            await AddUserChatOnRequestAdding(addJourneyRequestDto);
             return _mapper.Map<AddJourneyRequestDto>(jr);
         }
 
@@ -57,7 +50,7 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
             }
             await _journeyRequestRepository.Delete(journeyRequestToDelete);
             await _journeyRequestRepository.Save();
-
+            await DeleteUserChatOnRequestDiscarding(journeyRequestToDelete);
             return true;
         }
 
@@ -97,7 +90,33 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
                 changeRequestStatusDto.NewStatus);
             await _journeyRequestRepository.Update(journeyRequestToUpdate);
             await _journeyRequestRepository.Save();
+            await DeleteUserChatOnRequestDiscarding(journeyRequestToUpdate);
             return _mapper.Map<JourneyRequestDto>(journeyRequestToUpdate);
+        }
+
+        private async Task AddUserChatOnRequestAdding(AddJourneyRequestDto addJourneyRequestDto)
+        {
+            Chat chat = await _chatRepository.GetChatByJourneyId(addJourneyRequestDto.RequestedJourneyId);
+            await _userChatRepository.Insert(
+                new UserChat()
+                {
+                    AppUserId = addJourneyRequestDto.RequestUserId,
+                    ChatId = chat.Id
+                });
+            await _userChatRepository.Save();
+        }
+
+        private async Task DeleteUserChatOnRequestDiscarding(JourneyRequest journeyRequestToDelete)
+        {
+            if (journeyRequestToDelete.JourneyRequestStatus != JourneyRequestStatus.accepted)
+            {
+                Chat chat = await _chatRepository
+                   .GetChatByJourneyId(journeyRequestToDelete.RequestedJourneyId);
+                UserChat userChat = await _userChatRepository
+                    .GetUserChatByChatIdAndUserId(chat.Id, journeyRequestToDelete.RequestUserId);
+                await _userChatRepository.Delete(userChat);
+                await _userChatRepository.Save();
+            }
         }
 
         private async Task OnRequestStatusChanged(int journeyId, JourneyRequestStatus status)
