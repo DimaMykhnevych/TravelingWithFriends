@@ -85,6 +85,7 @@ namespace FriendsTraveling
             {
                 endpoints.MapControllers();
                 endpoints.MapHub<JourneyRequestHub>("/hubs/journeyRequest");
+                endpoints.MapHub<ChatHub>("/hubs/chat");
             });
         }
     }

@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 
 namespace FriendsTraveling.BusinessLayer.Services.Abstract
 {
-    public interface IChatService
+    public interface IMessageService
     {
-        Task<IEnumerable<ChatDto>> GetUserChats(int userId);
-        Task<ChatDto> GetChatById(int chatId);
+        Task<IEnumerable<MessageDto>> GetChatMessages(int chatId);
+        Task<MessageDto> PostMessage(MessageDto messageDto);
     }
 }

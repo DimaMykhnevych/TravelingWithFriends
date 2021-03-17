@@ -23,6 +23,13 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
             _mapper = mapper;
             _userManager = userManager;
         }
+
+        public async Task<ChatDto> GetChatById(int chatId)
+        {
+            Chat chat = await _chatRepository.Get(chatId);
+            return _mapper.Map<ChatDto>(chat);
+        }
+
         public async Task<IEnumerable<ChatDto>> GetUserChats(int userId)
         {
             IEnumerable<Chat> chats = await _chatRepository.GetUserChats(userId);

@@ -32,6 +32,7 @@ namespace FriendsTraveling.Web.Installers
             services.AddTransient<IEmailService, EmailService>();
             services.AddTransient<IChatService, ChatService>();
             services.AddTransient<IUserChatService, UserChatService>();
+            services.AddTransient<IMessageService, MessageService>();
 
             //builders
             services.AddTransient<IJourneySearchQueryBuilder, JourneySearchQueryBuilder>();
@@ -49,6 +50,7 @@ namespace FriendsTraveling.Web.Installers
             services.AddTransient<IJourneyRequestRepository, JourneyRequestRepository>();
             services.AddTransient<IChatRepository, ChatRepository>();
             services.AddTransient<IUserChatRepository, UserChatRepository>();
+            services.AddTransient<IMessageRepository, MessageRepository>();
         }
     }
 }
