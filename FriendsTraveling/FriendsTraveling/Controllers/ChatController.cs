@@ -26,8 +26,13 @@ namespace FriendsTraveling.Web.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetChatById(int id)
         {
-            ChatDto chat = await _chatService.GetChatById(id);
-            return Ok(chat);
+            string username = User.Identity.Name;
+            ChatDto chat = await _chatService.GetChatById(id, username);
+            if (chat != null)
+            {
+                return Ok(chat);
+            }
+            return NotFound();
         }
 
     }

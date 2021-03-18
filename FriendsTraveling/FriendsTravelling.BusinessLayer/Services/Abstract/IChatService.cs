@@ -7,6 +7,6 @@ namespace FriendsTraveling.BusinessLayer.Services.Abstract
     public interface IChatService
     {
         Task<IEnumerable<ChatDto>> GetUserChats(int userId);
-        Task<ChatDto> GetChatById(int chatId);
+        Task<ChatDto> GetChatById(int chatId, string currentUsername);
     }
 }

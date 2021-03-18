@@ -13,19 +13,27 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
     public class ChatService : IChatService
     {
         private readonly IChatRepository _chatRepository;
+        private readonly IUserChatRepository _userChatRepository;
         private readonly IMapper _mapper;
         private readonly UserManager<AppUser> _userManager;
         public ChatService(IChatRepository repository, 
             IMapper mapper,
-            UserManager<AppUser> userManager)
+            UserManager<AppUser> userManager,
+            IUserChatRepository userChatRepository)
         {
             _chatRepository = repository;
             _mapper = mapper;
             _userManager = userManager;
+            _userChatRepository = userChatRepository;
         }
 
-        public async Task<ChatDto> GetChatById(int chatId)
+        public async Task<ChatDto> GetChatById(int chatId, string currentUsername)
         {
+            AppUser currentUser = await _userManager.FindByNameAsync(currentUsername);
+            if(! await DoesUserHasChat(currentUser.Id, chatId))
+            {
+                return null;
+            }
             Chat chat = await _chatRepository.Get(chatId);
             return _mapper.Map<ChatDto>(chat);
         }
@@ -39,6 +47,12 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
                 c.JourneyCreator = await _userManager.FindByIdAsync(c.Journey.OrganizerId.ToString());
             }
             return chatsDto;
+        }
+
+        private async Task<bool> DoesUserHasChat(int userId, int chatId)
+        {
+            UserChat userChat = await _userChatRepository.GetUserChatByChatIdAndUserId(chatId, userId);
+            return userChat != null;
         }
     }
 }
