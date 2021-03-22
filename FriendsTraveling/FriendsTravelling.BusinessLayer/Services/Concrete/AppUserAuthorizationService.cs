@@ -1,5 +1,7 @@
-﻿using FriendsTraveling.BusinessLayer.Factories.AuthTokenFactory;
+﻿using FriendsTraveling.BusinessLayer.Constants;
+using FriendsTraveling.BusinessLayer.Factories.AuthTokenFactory;
 using FriendsTraveling.BusinessLayer.Services.Abstract;
+using FriendsTraveling.DataLayer.Enums;
 using FriendsTraveling.DataLayer.Models.Auth;
 using FriendsTraveling.DataLayer.Models.User;
 using Microsoft.AspNetCore.Identity;
@@ -38,21 +40,27 @@ namespace FriendsTraveling.BusinessLayer.Services.Concrete
             return new List<Claim>()
             {
                 new Claim(ClaimTypes.Name, user.UserName.ToString()),
+                new Claim(AuthorizationConstants.ID, user.Id.ToString()),
                 new Claim(ClaimTypes.Role, user.Role)
             };
         }
 
-        public async override Task<bool> VerifyUserAsync(AuthSignInModel model)
+        public async override Task<LoginErrorCodes> VerifyUserAsync(AuthSignInModel model)
         {
             AppUser user = await _userManager.FindByNameAsync(model.UserName);
             if (user == null)
             {
-                return false;
+                return LoginErrorCodes.InvalidUsernameOrPassword;
+            }
+
+            if (!await _userManager.IsEmailConfirmedAsync(user))
+            {
+                return LoginErrorCodes.EmailConfirmationRequired;
             }
 
             SignInResult result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
 
-            return result.Succeeded;
+            return result.Succeeded ? LoginErrorCodes.None : LoginErrorCodes.InvalidUsernameOrPassword;
         }
 
         public async override Task<UserAuthInfo> GetUserInfoAsync(string userName)

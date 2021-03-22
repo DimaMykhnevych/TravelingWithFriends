@@ -19,6 +19,8 @@ namespace FriendsTraveling.BusinessLayer.Mappers
             //    .ForMember(u => u.Role, m => m.MapFrom(u => u.Role))
             //    .ForMember(u => u.Username, m => m.MapFrom(u => u.Username));
 
+          
+
             CreateMap<UpdateUserModel, AppUser>()
                 .ForMember(u => u.Role, m => m.MapFrom(u => u.Role))
                 .ForMember(u => u.UserName, m => m.MapFrom(u => u.Username));
@@ -32,6 +34,13 @@ namespace FriendsTraveling.BusinessLayer.Mappers
             CreateMap<Journey, JourneyDto>().ReverseMap();
             CreateMap<UserJourney, UserJourneyDto>().ReverseMap();
             CreateMap<Image, ImageDto>().ReverseMap();
+            CreateMap<JourneyRequest, AddJourneyRequestDto>().ReverseMap();
+            CreateMap<JourneyRequest, JourneyRequestDto>().ReverseMap();
+            CreateMap<JourneyRequest, ReviewJourneyRequestDto>().ReverseMap();
+            CreateMap<Chat, ChatDto>().ReverseMap();
+            CreateMap<Message, MessageDto>().ReverseMap();
+            CreateMap<UserChat, UserChatDto>().ReverseMap();
+
         }
     }
 }

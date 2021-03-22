@@ -17,7 +17,32 @@ namespace FriendsTraveling.DataLayer.Migrations
             modelBuilder
                 .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.2");
+                .HasAnnotation("ProductVersion", "5.0.3");
+
+            modelBuilder.Entity("FriendsTraveling.DataLayer.Models.Chat", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("JourneyChatId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("JourneyChatId")
+                        .IsUnique();
+
+                    b.ToTable("Chats");
+                });
 
             modelBuilder.Entity("FriendsTraveling.DataLayer.Models.Image", b =>
                 {
@@ -85,6 +110,34 @@ namespace FriendsTraveling.DataLayer.Migrations
                     b.ToTable("Journeys");
                 });
 
+            modelBuilder.Entity("FriendsTraveling.DataLayer.Models.JourneyRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<int>("JourneyRequestStatus")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OrganizerId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RequestUserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RequestedJourneyId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrganizerId");
+
+                    b.HasIndex("RequestUserId");
+
+                    b.ToTable("JourneyRequests");
+                });
+
             modelBuilder.Entity("FriendsTraveling.DataLayer.Models.Location", b =>
                 {
                     b.Property<int>("Id")
@@ -109,6 +162,35 @@ namespace FriendsTraveling.DataLayer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Locations");
+                });
+
+            modelBuilder.Entity("FriendsTraveling.DataLayer.Models.Message", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<int>("AppUserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ChatId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("SendingDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.HasIndex("ChatId");
+
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("FriendsTraveling.DataLayer.Models.Route", b =>
@@ -280,6 +362,28 @@ namespace FriendsTraveling.DataLayer.Migrations
                     b.ToTable("AspNetRoles");
                 });
 
+            modelBuilder.Entity("FriendsTraveling.DataLayer.Models.UserChat", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<int>("AppUserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ChatId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.HasIndex("ChatId");
+
+                    b.ToTable("UserChats");
+                });
+
             modelBuilder.Entity("FriendsTraveling.DataLayer.Models.UserJourney", b =>
                 {
                     b.Property<int>("Id")
@@ -403,6 +507,17 @@ namespace FriendsTraveling.DataLayer.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("FriendsTraveling.DataLayer.Models.Chat", b =>
+                {
+                    b.HasOne("FriendsTraveling.DataLayer.Models.Journey", "Journey")
+                        .WithOne("Chat")
+                        .HasForeignKey("FriendsTraveling.DataLayer.Models.Chat", "JourneyChatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Journey");
+                });
+
             modelBuilder.Entity("FriendsTraveling.DataLayer.Models.Image", b =>
                 {
                     b.HasOne("FriendsTraveling.DataLayer.Models.User.AppUser", "AppUser")
@@ -423,6 +538,44 @@ namespace FriendsTraveling.DataLayer.Migrations
                         .IsRequired();
 
                     b.Navigation("Route");
+                });
+
+            modelBuilder.Entity("FriendsTraveling.DataLayer.Models.JourneyRequest", b =>
+                {
+                    b.HasOne("FriendsTraveling.DataLayer.Models.User.AppUser", "Organizer")
+                        .WithMany("JourneyRequests")
+                        .HasForeignKey("OrganizerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FriendsTraveling.DataLayer.Models.User.AppUser", "RequestUser")
+                        .WithMany()
+                        .HasForeignKey("RequestUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Organizer");
+
+                    b.Navigation("RequestUser");
+                });
+
+            modelBuilder.Entity("FriendsTraveling.DataLayer.Models.Message", b =>
+                {
+                    b.HasOne("FriendsTraveling.DataLayer.Models.User.AppUser", "Sender")
+                        .WithMany("Messages")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FriendsTraveling.DataLayer.Models.Chat", "Chat")
+                        .WithMany("Messages")
+                        .HasForeignKey("ChatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Chat");
+
+                    b.Navigation("Sender");
                 });
 
             modelBuilder.Entity("FriendsTraveling.DataLayer.Models.Route", b =>
@@ -453,6 +606,25 @@ namespace FriendsTraveling.DataLayer.Migrations
                     b.Navigation("Location");
 
                     b.Navigation("Route");
+                });
+
+            modelBuilder.Entity("FriendsTraveling.DataLayer.Models.UserChat", b =>
+                {
+                    b.HasOne("FriendsTraveling.DataLayer.Models.User.AppUser", "AppUser")
+                        .WithMany("UserChats")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FriendsTraveling.DataLayer.Models.Chat", "Chat")
+                        .WithMany("UserChats")
+                        .HasForeignKey("ChatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+
+                    b.Navigation("Chat");
                 });
 
             modelBuilder.Entity("FriendsTraveling.DataLayer.Models.UserJourney", b =>
@@ -525,8 +697,17 @@ namespace FriendsTraveling.DataLayer.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("FriendsTraveling.DataLayer.Models.Chat", b =>
+                {
+                    b.Navigation("Messages");
+
+                    b.Navigation("UserChats");
+                });
+
             modelBuilder.Entity("FriendsTraveling.DataLayer.Models.Journey", b =>
                 {
+                    b.Navigation("Chat");
+
                     b.Navigation("UserJourneys");
                 });
 
@@ -549,7 +730,13 @@ namespace FriendsTraveling.DataLayer.Migrations
 
             modelBuilder.Entity("FriendsTraveling.DataLayer.Models.User.AppUser", b =>
                 {
+                    b.Navigation("JourneyRequests");
+
+                    b.Navigation("Messages");
+
                     b.Navigation("ProfileImage");
+
+                    b.Navigation("UserChats");
 
                     b.Navigation("UserJourneys");
                 });

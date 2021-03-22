@@ -21,10 +21,28 @@ namespace FriendsTraveling.Web.Controllers
             _service = service;
         }
 
-        [HttpGet("{username}")]
-        public async Task<IActionResult> Get(string username)
+        //[HttpGet("{username}")]
+        //public async Task<IActionResult> Get(string username)
+        //{
+        //    return Ok(await _service.GetUserByUsername(username));
+        //}
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
         {
-            return Ok(await _service.GetUserByUsername(username));
+            if (id != 0)
+            {
+                AppUser user = await _service.GetAllUserInfoById(id);
+                if (user != null)
+                {
+                    return Ok(user);
+                }
+            }
+            else
+            {
+                AppUser user = await _service.GetUserByUsername(User.Identity.Name);
+                return Ok(user);
+            }
+            return NotFound();
         }
 
         [HttpPost]
@@ -41,6 +59,16 @@ namespace FriendsTraveling.Web.Controllers
                 return BadRequest(AddModelStateError("username", ErrorMessagesConstants.USERNAME_ALREADY_TAKEN));
             }
         }
+
+        [HttpPost("confirmEmail")]
+        public async Task<IActionResult> ConfirmEmail([FromBody] ConfirmEmailDto confirmEmailDto)
+        {
+            ConfirmEmailDto confirmEmail = await _service.ConfirmEmail(confirmEmailDto);
+            if(confirmEmail == null)
+                return BadRequest("Invalid Email Confirmation Request");
+            return Ok(confirmEmail);
+        }
+
 
         [HttpPut]
         public async Task<IActionResult> UpdateUserProfile([FromBody] UpdateUserProfileDto userProfileDTO)

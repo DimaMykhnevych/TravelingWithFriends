@@ -9,5 +9,7 @@ namespace FriendsTraveling.BusinessLayer.DTOs
         public int LocationId { get; set; }
         [Required]
         public int LocationOrder { get; set; }
+        public RouteDto Route { get; set; }
+        public LocationDto Location { get; set; }
     }
 }

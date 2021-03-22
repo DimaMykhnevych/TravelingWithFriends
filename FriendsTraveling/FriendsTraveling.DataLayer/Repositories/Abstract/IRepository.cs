@@ -8,7 +8,7 @@ namespace FriendsTraveling.DataLayer.Repositories.Abstract
         Task<TEntity> Get(int id);
         Task<IEnumerable<TEntity>> GetAll();
 
-        Task Insert(TEntity entity);
+        Task<TEntity> Insert(TEntity entity);
 
         Task Delete(TEntity entity);
 

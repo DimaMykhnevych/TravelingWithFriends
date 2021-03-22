@@ -1,7 +1,10 @@
-﻿using FriendsTraveling.BusinessLayer.DTOs;
+﻿using FriendsTraveling.BusinessLayer.Constants;
+using FriendsTraveling.BusinessLayer.DTOs;
 using FriendsTraveling.BusinessLayer.Services.Abstract;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace FriendsTraveling.Web.Controllers
@@ -11,15 +14,19 @@ namespace FriendsTraveling.Web.Controllers
     public class JourneyController : ControllerBase
     {
         private readonly IJourneyService _journeyService;
-        public JourneyController(IJourneyService journeyService)
+        private readonly IAddJourneyService _addJourneyService;
+        public JourneyController(IJourneyService journeyService, IAddJourneyService addJourneyService)
         {
             _journeyService = journeyService;
+            _addJourneyService = addJourneyService;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetJourneys()
+        public async Task<IActionResult> GetJourneys([FromQuery] SearchJourneyDto searchJourneyDto)
         {
-            IEnumerable<JourneyDto> journey = await _journeyService.GetJourneys();
+            int userId = Convert.ToInt32(User.FindFirstValue(AuthorizationConstants.ID));
+            searchJourneyDto.UserId = userId;
+            IEnumerable<JourneyDto> journey = await _journeyService.SearchJourney(searchJourneyDto);
             return Ok(journey);
         }
 
@@ -35,7 +42,7 @@ namespace FriendsTraveling.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> AddJourney([FromBody] JourneyDto journeyDTO)
         {
-            JourneyDto added = await _journeyService.AddJourney(journeyDTO);
+            JourneyDto added = await _addJourneyService.AddJourney(journeyDTO, User.Identity.Name);
             if (added == null)
                 return BadRequest();
             return Ok(added);

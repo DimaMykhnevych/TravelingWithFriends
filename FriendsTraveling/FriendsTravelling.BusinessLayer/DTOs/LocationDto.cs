@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace FriendsTraveling.BusinessLayer.DTOs
 {
@@ -13,5 +14,8 @@ namespace FriendsTraveling.BusinessLayer.DTOs
 
         [Required]
         public string Country { get; set; }
+
+        public List<RouteLocationDto> RouteLocations { get; set; }
+
     }
 }

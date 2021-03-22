@@ -1,6 +1,8 @@
 ﻿using FriendsTraveling.BusinessLayer.Factories.AuthTokenFactory;
 using FriendsTraveling.BusinessLayer.Services.Abstract;
 using FriendsTraveling.BusinessLayer.Services.Concrete;
+using FriendsTraveling.DataLayer.Builders.Abstract;
+using FriendsTraveling.DataLayer.Builders.Concrete;
 using FriendsTraveling.DataLayer.Repositories.Abstract;
 using FriendsTraveling.DataLayer.Repositories.Concrete;
 using Microsoft.Extensions.Configuration;
@@ -25,8 +27,15 @@ namespace FriendsTraveling.Web.Installers
             services.AddTransient<IJourneyService, JourneyService>();
             services.AddTransient<IUserJourneyService, UserJourneyService>();
             services.AddTransient<IImageService, ImageService>();
+            services.AddTransient<IAddJourneyService, AddJourneyService>();
+            services.AddTransient<IJourneyRequestService, JourneyRequestService>();
+            services.AddTransient<IEmailService, EmailService>();
+            services.AddTransient<IChatService, ChatService>();
+            services.AddTransient<IUserChatService, UserChatService>();
+            services.AddTransient<IMessageService, MessageService>();
 
-
+            //builders
+            services.AddTransient<IJourneySearchQueryBuilder, JourneySearchQueryBuilder>();
 
 
             //repositories
@@ -38,6 +47,10 @@ namespace FriendsTraveling.Web.Installers
             services.AddTransient<IUserJourneyRepository, UserJourneyRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IImageRepository, ImageRepository>();
+            services.AddTransient<IJourneyRequestRepository, JourneyRequestRepository>();
+            services.AddTransient<IChatRepository, ChatRepository>();
+            services.AddTransient<IUserChatRepository, UserChatRepository>();
+            services.AddTransient<IMessageRepository, MessageRepository>();
         }
     }
 }

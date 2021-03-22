@@ -2,6 +2,7 @@
 using FriendsTraveling.DataLayer.Models.Auth;
 using FriendsTraveling.DataLayer.Models.User;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -24,7 +25,6 @@ namespace FriendsTraveling.Web.Controllers
         public async Task<IActionResult> Login([FromBody] AuthSignInModel model)
         {
             JWTTokenStatusResult result = await _authorizationService.GenerateTokenAsync(model);
-
             return Ok(result);
         }
 
